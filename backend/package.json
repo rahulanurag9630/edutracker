@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anurag singh kushwaha and team",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^6.1.0",
+    "mongoos": "^0.0.1-security",
+    "mongoose": "^7.5.2"
+  }
 }
