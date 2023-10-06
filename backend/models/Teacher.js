@@ -60,9 +60,7 @@ const teacherSchema = new mongoose.Schema({
     required: true,
   },
   // Photo field as a Buffer to store image data
-  photo: {
-    type: Buffer,
-  },
+
 });
 
 // Create a Teacher model from the schema

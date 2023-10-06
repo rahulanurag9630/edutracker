@@ -1,6 +1,6 @@
 
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const uri = "mongodb+srv://anurag:anuragsinghkushwaha45@cluster0.v9fig4z.mongodb.net/eduTracker?retryWrites=true&w=majority";
 
 const connectToMongo = () =>{
