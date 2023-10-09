@@ -13,14 +13,14 @@ const assignmentSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  class:{
+    type:String,
+    required:true
+  },
   questions: {
     type: String,
     required: true,
-  },
-  author: {
-    type: String, 
-    required: true,
-  },
+  }
 });
 
 const Assignment = mongoose.model('Assignment', assignmentSchema);

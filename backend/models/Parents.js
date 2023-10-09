@@ -42,10 +42,7 @@ const parentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-  },
+
   gender: {
     type: String,
     enum: ['Male', 'Female', 'Other'],

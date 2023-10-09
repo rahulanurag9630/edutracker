@@ -1,0 +1,17 @@
+.heading-bar {
+    background: linear-gradient(to right, #007bff, #00bcd4, #007bff); /* Gradient colors */
+    background-size: 200% 100%; /* Background size */
+    color: white;
+    border-radius: 5px;
+    animation: gradientAnimation 4s infinite; /* Animation duration and iteration */
+  }
+  
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  

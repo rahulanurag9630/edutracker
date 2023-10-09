@@ -1,0 +1,41 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* This will ensure the body element takes at least the full height of the viewport */
+    margin: 0;
+  }
+  .footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+ 
+  
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .footer h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+  
+  .footer p {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  
+  @media (min-width: 768px) {
+    .footer {
+      padding: 40px 0;
+    }
+  }
+  

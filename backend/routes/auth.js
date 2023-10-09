@@ -14,8 +14,10 @@ const JWT_SECRET = 'anurag$boy'
 var jwt = require('jsonwebtoken');
 
 const { body, validationResult } = require('express-validator');
+const Parent = require('../models/Parents');
 
-// API for creating Teacher
+// API for creating Teacher////////////////////////////////////////////////////////////////////////////////////////
+
 router.post('/createTeacher', [
     // Validation middleware using express-validator
     body('firstName', 'First name is required').isLength({ min: 1 }),
@@ -77,7 +79,7 @@ router.post('/createTeacher', [
     }
 });
 
-// API for creating Student with his photo///////////////////////////////////////////////////
+// API for creating Student with his photo////////////////////////////////////////////////////////////////////////////////////
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -161,6 +163,71 @@ router.post('/createStudent', upload, [
 });
 
 
-//API for the registration of the parent
+//API for the registration of the parent//////////////////////////////////////////////////////////////////////////////////
+
+router.post('/createParent', [
+    // Validation middleware using express-validator
+    body('firstName', 'First name is required').isLength({ min: 1 }),
+    body('lastName', 'Last name is required').isLength({ min: 1 }),
+    body('email', 'Enter a valid email').isEmail(),
+    body('contactNumber', 'Invalid Indian phone number format').matches(/^[6-9]\d{9}$/),
+    body('address', 'Address is required').isLength({ min: 1 }),
+    body('relationWithStudent', 'relationship is required').isLength({ min: 2 }),
+    body('password', 'Password must be at least 5 characters long').isLength({ min: 5 }),
+    body('confirmPassword', 'Passwords do not match').custom((value, { req }) => {
+        return value === req.body.password;
+    }),
+    body('gender', 'Invalid gender value').isIn(['Male', 'Female', 'Other']),
+], async (req, res) => {
+    let success = false;
+
+    //check if there are validation results
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+        return res.status(400).json({ success, error: error.array() });
+    }
+
+    //check if the user is exists
+    
+    try{
+        let parent = await Parents.findOne({email: req.body.email});
+
+        if(parent)
+        {
+            return res.status(400).json({ error:"sorry this user is already exists" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash( req.body.password,salt );
+
+        parent = await Parents.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            contactNumber: req.body.contactNumber,
+            address: req.body.address,
+            relationWithStudent:req.body.relationWithStudent,
+            password: hashedPassword,
+            gender: req.body.gender,
+            // You can handle photo field separately if needed
+        });
+
+        const data = {
+            parents: {
+                id: parent.id
+            }
+        }
+        const authToken = jwt.sign(data, JWT_SECRET)
+        success = true;
+        res.json({ success, authToken });
+        console.log(authToken);
+
+    }
+    catch(error){
+        console.error(error.message);
+        res.status(500).send("Some error occurred");
+    }
+
+})
 
 module.exports = router;
