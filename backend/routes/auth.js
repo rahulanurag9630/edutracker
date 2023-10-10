@@ -189,16 +189,15 @@ router.post('/createParent', [
     }
 
     //check if the user is exists
-    
-    try{
-        let parent = await Parents.findOne({email: req.body.email});
 
-        if(parent)
-        {
-            return res.status(400).json({ error:"sorry this user is already exists" });
+    try {
+        let parent = await Parents.findOne({ email: req.body.email });
+
+        if (parent) {
+            return res.status(400).json({ error: "sorry this user is already exists" });
         }
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash( req.body.password,salt );
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         parent = await Parents.create({
             firstName: req.body.firstName,
@@ -206,7 +205,7 @@ router.post('/createParent', [
             email: req.body.email,
             contactNumber: req.body.contactNumber,
             address: req.body.address,
-            relationWithStudent:req.body.relationWithStudent,
+            relationWithStudent: req.body.relationWithStudent,
             password: hashedPassword,
             gender: req.body.gender,
             // You can handle photo field separately if needed
@@ -223,7 +222,7 @@ router.post('/createParent', [
         console.log(authToken);
 
     }
-    catch(error){
+    catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occurred");
     }

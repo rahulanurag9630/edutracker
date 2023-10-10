@@ -14,7 +14,9 @@ const AssignmentForm = ({ onSubmit }) => {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Give Assignment</h2>
+      <div className="heading-bar text-center bg-primary py-2 mb-3">
+        <h2 className="text-white">Give assignment</h2>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Subject Name:</label>
@@ -36,7 +38,9 @@ const AssignmentForm = ({ onSubmit }) => {
           <label>Questions (at least 5):</label>
           <textarea className="form-control" rows="5" value={questions} onChange={(e) => setQuestions(e.target.value)} required />
         </div>
+        <br/>
         <button type="submit" className="btn btn-primary">Submit</button>
+        <br/>
       </form>
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import BluePatti from '../../assets/BluePatti.css'
 
 
 const ExamResult = ({ onSubmit }) => {
