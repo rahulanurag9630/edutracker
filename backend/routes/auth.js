@@ -9,12 +9,11 @@ const multer = require('multer');
 // here file destination is defined
 
 
-const JWT_SECRET = 'anurag$boy'
+const JWT_SECRET = process.env.JWT_SECRET;
 
 var jwt = require('jsonwebtoken');
 
 const { body, validationResult } = require('express-validator');
-const Parent = require('../models/Parents');
 
 // API for creating Teacher////////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,6 +72,7 @@ router.post('/createTeacher', [
         const authToken = jwt.sign(data, JWT_SECRET)
         success = true;
         res.json({ success, authToken });
+        console.log(teacher)
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occurred");
