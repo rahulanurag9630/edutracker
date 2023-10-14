@@ -38,6 +38,7 @@ const parentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  
   password: {
     type: String,
     required: true,
@@ -51,5 +52,5 @@ const parentSchema = new mongoose.Schema({
 });
 
 const Parent = mongoose.model('Parent', parentSchema);
-
+ 
 module.exports = Parent;

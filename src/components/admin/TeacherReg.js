@@ -192,11 +192,14 @@
 // export default TeacherReg;
 
 
+import { useNavigate } from "react-router-dom";
 
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const TeacherReg = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -219,6 +222,7 @@ const TeacherReg = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/createTeacher', formData);
       console.log(response.data);
+      navigate('/ahome');
       // Handle success, redirect user, or show a success message
     } catch (error) {
       console.error(error.response.data);

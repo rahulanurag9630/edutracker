@@ -62,6 +62,14 @@ const studentSchema = new mongoose.Schema({
   photo: {
     type:String, // Photo stored as a Buffer
   },
+  currenSem:{
+    type:String,
+    default:1
+  },
+  rollNo:{
+    type:String,
+    required:true
+  }
 });
 
 const Student = mongoose.model('Student', studentSchema);

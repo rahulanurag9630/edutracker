@@ -72,7 +72,7 @@ router.post('/createTeacher', [
         const authToken = jwt.sign(data, JWT_SECRET)
         success = true;
         res.json({ success, authToken });
-        console.log(teacher)
+
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some error occurred");
@@ -83,7 +83,7 @@ router.post('/createTeacher', [
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads'); // The folder where uploaded files will be saved
+        cb(null, 'D:/Major_Project/edutracker/backend/uploads'); // The folder where uploaded files will be saved
     },
     filename: (req, file, cb) => {
         const extname = path.extname(file.originalname);
@@ -108,6 +108,8 @@ router.post('/createStudent', upload, [
         return value === req.body.password;
     }),
     body('gender', 'Invalid gender value').isIn(['Male', 'Female', 'Other']),
+    body('rollNo', 'Roll no is required').isLength({ min: 3 })
+
 
 ], async (req, res) => {
     let success = false;
@@ -143,7 +145,9 @@ router.post('/createStudent', upload, [
             password: hashedPassword,
             confirmPassword: hashedPassword,
             gender: req.body.gender,
-            photo: photoFilename, // Store the filename in the student record
+            photo: photoFilename,
+            rollNo: req.body.rollNo, // Store the filename in the student record
+
         });
 
         const data = {
@@ -227,6 +231,105 @@ router.post('/createParent', [
         res.status(500).send("Some error occurred");
     }
 
+})
+
+//Login the Users based on there User Type////////////////////////////////////////////////////////
+
+router.post('/login', [
+    body('userType', 'please enter valid user type').exists(),
+    body('email', 'enter a valid email').isEmail(),
+    body('password', 'password can not be blank').exists()
+  
+], async (req, res) => {
+    let success = false
+    //if there are error the return bad request and errors
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { userType, email, password } = req.body;
+
+    try {
+        if (userType === 'Teacher') {
+            let user = await Teacher.findOne({ email })
+            if (!user) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+
+            const comparePassword = await bcrypt.compare(password, user.password);
+
+            if (!comparePassword) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+            const data = {
+                user: {
+                    id: user.id
+                }
+            }
+
+            const authToken = jwt.sign(data, JWT_SECRET)
+            success = true;
+            const id = user.id;
+            res.json({ success, authToken, id, userType });
+        }
+        else if (userType === 'Student') {
+            let user = await Student.findOne({ email })
+            if (!user) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+
+            const comparePassword = await bcrypt.compare(password, user.password);
+
+            if (!comparePassword) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+            const data = {
+                user: {
+                    id: user.id
+                }
+            }
+
+            const authToken = jwt.sign(data, JWT_SECRET)
+            success = true;
+            const id = user.id;
+            res.json({ success, authToken, id, userType });
+
+        }
+        else if (userType === 'Parent') {
+            let user = await Parents.findOne({ email })
+            if (!user) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+
+            const comparePassword = await bcrypt.compare(password, user.password);
+
+            if (!comparePassword) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+            const data = {
+                user: {
+                    id: user.id
+                }
+            }
+
+            const authToken = jwt.sign(data, JWT_SECRET)
+            success = true;
+            const id = user.id;
+            res.json({ success, authToken, id, userType });
+
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("internal server error");
+    }
 })
 
 module.exports = router;

@@ -18,7 +18,7 @@ import SHome from './components/student/SHome';
 import ViewAssignment from './components/student/ViewAssinment';
 import ViewAttendence from './components/student/ViewAttendence';
 import ViewNotice from './components/student/ViewNotice';
-
+import StudentPhoto from './components/student/StudentPhoto';
 //admin component//////////////////////////////////////////////////////////////
 import StudentReg from './components/admin/StudentReg';
 import TeacherReg from './components/admin/TeacherReg';
@@ -39,19 +39,18 @@ import Login from './components/auth/Login';
 
 function App() {
 
-  const [userType, setUserType] = useState('admin'); // Set the initial user type, change it based on authentication logic
 
   let NavigationComponent;
  
-
+  const userType = localStorage.getItem('userType')
   // Determine which navigation component to use based on user type
-  if (userType === 'admin') {
+  if (userType === 'Admin') {
     NavigationComponent = <AdminNav />;
-  } else if (userType === 'teacher') { 
+  } else if (userType === 'Teacher') { 
     NavigationComponent = <TeacherNav />;
-  } else if (userType === 'parent') {
+  } else if (userType === 'Parent') {
     NavigationComponent = <StudentNav />;
-  } else if(userType === 'student') {
+  } else if(userType === 'Student') {
     NavigationComponent = <StudentNav />;
   }
   else {
@@ -62,6 +61,7 @@ function App() {
     <div className="container">
 
       <BrowserRouter>
+      {/* <StudentPhoto /> */}
       {NavigationComponent}
         <Routes>
           
