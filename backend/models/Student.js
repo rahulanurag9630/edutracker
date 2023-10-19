@@ -60,9 +60,9 @@ const studentSchema = new mongoose.Schema({
     required: true,
   },
   photo: {
-    type:String, // Photo stored as a Buffer
+    type:String, 
   },
-  currenSem:{
+  currentSem:{
     type:String,
     default:1
   },

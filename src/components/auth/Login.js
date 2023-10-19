@@ -1,5 +1,6 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React,{useState} from 'react';
+import { Link ,useNavigate} from "react-router-dom";
+import axios from 'axios';
 const loginFormStyle = {
   width: '350px',
   height: '450px',
@@ -55,6 +56,60 @@ const submitButtonStyle = {
 
 
 export default function Login() {
+
+  const navigate = useNavigate();
+
+  const [credentials, setCredentials] = useState({email: "", password: ""});
+
+  const onChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit =async (e)=>{
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/tlogin', credentials);
+      console.log(response.data);
+      navigate('/thome');
+      localStorage.setItem("token",response.data.authToken);
+      localStorage.setItem("id",response.data.id);
+      localStorage.setItem("userType",response.data.userType);
+    //   if(response.data.userType ==='Teacher')
+    //   {
+    //     navigate('/thome');
+    //     localStorage.setItem("token",response.data.authToken);
+    //     localStorage.setItem("id",response.data.id);
+    //     localStorage.setItem("userType",response.data.userType);
+    //   }
+    //    if(response.data.userType ==='Student')
+    //   {
+    //     navigate('/shome');
+    //     localStorage.setItem("token",response.data.authToken);
+    //     localStorage.setItem("id",response.data.id);
+    //     localStorage.setItem("userType",response.data.userType);
+    //   }
+    //  if(response.data.userType ==='Parent')
+    //   {
+    //     navigate('/phome');
+    //     localStorage.setItem("token",response.data.authToken);
+    //     localStorage.setItem("id",response.data.id);
+    //     localStorage.setItem("userType",response.data.userType);
+    //   }
+    //    if(response.data.userType ==='Admin')
+    //   {
+    //     navigate('/ahome');
+    //     localStorage.setItem("token",response.data.authToken);
+    //     localStorage.setItem("id",response.data.id);
+    //     localStorage.setItem("userType",response.data.userType);
+    //   }
+      
+      // Handle success, redirect user, or show a success message
+    } catch (error) {
+      console.error(error.response.data);
+      // Handle error, show error message to the user
+    }
+  }
+
   return (
     <div className="global-container">
       <div className="card login-form" style={loginFormStyle}>
@@ -63,38 +118,41 @@ export default function Login() {
             LOGIN
           </h1>
           <div className="card-text">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1">Email Address</label>
+                <label htmlFor="email">Email Address</label>
                 <input
                   type="email"
+                  name="email"
                   className="form-control form-control-sm"
                   id="exampleInputEmail1"
                   style={inputStyle}
+                  onChange={onChange}
+                  value={credentials.email}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputPassword1">Password</label>
+                <label htmlFor="password">Password</label>
                 <Link to="#" style={forgotPasswordStyle}>
                   Forgot Password?
-                  </Link>
+                </Link>
                 <input
                   type="password"
+                  name='password'
                   className="form-control form-control-sm"
                   id="exampleInputPassword1"
                   style={inputStyle}
+                  onChange={onChange}
+                  value={credentials.password}
                 />
-              </div>
-              <button
+              </div> <button
                 type="submit"
                 className="btn btn-primary btn-block"
                 style={submitButtonStyle}
               >
                 Sign In
               </button>
-              <div className="signup" style={signUpStyle}>
-                Do not have an account? <Link to="#">Create One</Link>
-              </div>
+
             </form>
           </div>
         </div>

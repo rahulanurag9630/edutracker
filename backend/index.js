@@ -11,10 +11,13 @@ app.use(cors());
 
 // Serve static files from the 'uploads' folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/notes', express.static(path.join(__dirname, 'notes')));
+
 app.use(express.json())
 
 app.use('/api/auth' ,require('./routes/auth'));
 app.use('/api/students' ,require('./routes/students'));
+app.use('/api/teacher' ,require('./routes/teacher'));
 
 
 app.get('/', (req, res) => {

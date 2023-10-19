@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 import { FaHome, FaClipboardList, FaFileAlt, FaCalendar, FaTasks, FaGraduationCap, FaHandsHelping, FaUserCircle } from 'react-icons/fa'; // Import Font Awesome icons
 
 const StudentNav = () => {
@@ -7,6 +7,14 @@ const StudentNav = () => {
     borderRadius: '10px'
   };
   let location = useLocation();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('id');
+        localStorage.removeItem('userType');
+        navigate('/');
+
+    }
 
   return (
     <div className='container'>
@@ -100,6 +108,7 @@ const StudentNav = () => {
                   <FaUserCircle /> Profile
                 </Link>
               </li>
+              <button onClick={handleLogout} className='btn btn-dark'>Logout</button>
             </ul>
           </div>
         </div>

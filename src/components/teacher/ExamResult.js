@@ -1,77 +1,138 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ExamResult = ({ onSubmit }) => {
-  const [studentName, setStudentName] = useState('');
-  const [examDate, setExamDate] = useState('');
-  const [subjects, setSubjects] = useState([]);
+  const navigate = useNavigate();
+  
 
-  const handleInputChange = (e, index) => {
+  const initialSubject = {
+    subName: '',
+    subCode: '',
+    totalMarks: '',
+    obtainedMarks: ''
+  };
+
+  const [formData, setFormData] = useState({
+    studentName: '',
+    rollNo: '',
+    fatherName: '',
+    examDate: '',
+    subjects: [initialSubject]
+  });
+
+  const handleOnChange = (e, index) => {
     const { name, value } = e.target;
-    const updatedSubjects = [...subjects];
-    updatedSubjects[index][name] = value;
-    setSubjects(updatedSubjects);
+
+    if (name === 'subName' || name === 'subCode' || name === 'totalMarks' || name === 'obtainedMarks') {
+      // Handle subject-related fields
+      const updatedSubjects = [...formData.subjects];
+      updatedSubjects[index][name] = value;
+      setFormData({ ...formData, subjects: updatedSubjects });
+    } else {
+      // Handle non-subject fields
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleAddSubject = () => {
-    const newSubject = {
-      name: '',
-      code: '',
-      totalMarks: '',
-      obtainedMarks: '',
-    };
-    setSubjects([...subjects, newSubject]);
+    setFormData(prevState => ({
+      ...prevState,
+      subjects: [...prevState.subjects, { ...initialSubject }]
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ studentName, examDate, subjects });
+    try {
+      const response = await axios.post(`http://localhost:5000/api/teacher/submitExamResult`, formData, {
+        headers: {
+          'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyOGM3ODk3YWI5ZjM1NjMwY2IxMDQzIn0sImlhdCI6MTY5NzY1MDE2M30.Nd0eqyTBhYHUBhBp3gJg9FeqxIDtoLye4CKMEuI2FWw"
+        }
+      });
+      console.log(response.data);
+      navigate('/thome');
+    } catch (error) {
+      // Handle errors
+      console.error('Error submitting exam result:', error);
+      console.log(formData)
+    }
   };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const authToken = localStorage.getItem('token');
+    if (authToken) {
+      setIsLoggedIn(true);
+    } else {
+      // If user is not logged in, redirect to home page
+      navigate('/');
+    }
+  }, [navigate]);
+
+  // If user is not authenticated, do not render the component
+  if (!isLoggedIn) {
+    return null;
+  }
+
+else {
   return (
     <div className="container mt-5">
       <div className="heading-bar text-center bg-primary py-2 mb-3">
         <h2 className="text-white">Exam Result</h2>
       </div>
       <form onSubmit={handleSubmit} className="exam-form">
+        {/* Non-subject fields */}
         <div className="form-group">
           <label>Student Name:</label>
-          <input type="text" className="form-control" value={studentName} onChange={(e) => setStudentName(e.target.value)} required />
+          <input type="text" className="form-control" name="studentName" value={formData.studentName} onChange={(e) => handleOnChange(e)} required />
+        </div>
+        <div className="form-group">
+          <label>Roll Number:</label>
+          <input type="text" className="form-control" name="rollNo" value={formData.rollNo} onChange={(e) => handleOnChange(e)} required />
+        </div>
+        <div className="form-group">
+          <label>Father's Name:</label>
+          <input type="text" className="form-control" name="fatherName" value={formData.fatherName} onChange={(e) => handleOnChange(e)} required />
         </div>
         <div className="form-group">
           <label>Exam Date:</label>
-          <input type="date" className="form-control" value={examDate} onChange={(e) => setExamDate(e.target.value)} required />
+          <input type="date" className="form-control" name="examDate" value={formData.examDate} onChange={(e) => handleOnChange(e)} required />
         </div>
-        {subjects.map((subject, index) => (
+
+        {/* Subject-related fields */}
+        {formData.subjects.map((subject, index) => (
           <div className="subject-container" key={index}>
             <div className="form-group">
               <label>Subject Name:</label>
-              <input type="text" className="form-control" name="name" value={subject.name} onChange={(e) => handleInputChange(e, index)} required />
+              <input type="text" className="form-control" name="subName" value={subject.subName} onChange={(e) => handleOnChange(e, index)} required />
             </div>
             <div className="form-group">
               <label>Subject Code:</label>
-              <input type="text" className="form-control" name="code" value={subject.code} onChange={(e) => handleInputChange(e, index)} required />
+              <input type="text" className="form-control" name="subCode" value={subject.subCode} onChange={(e) => handleOnChange(e, index)} required />
             </div>
             <div className="form-group">
               <label>Total Marks:</label>
-              <input type="number" className="form-control" name="totalMarks" value={subject.totalMarks} onChange={(e) => handleInputChange(e, index)} required />
+              <input type="number" className="form-control" name="totalMarks" value={subject.totalMarks} onChange={(e) => handleOnChange(e, index)} required />
             </div>
             <div className="form-group">
               <label>Obtained Marks:</label>
-              <input type="number" className="form-control" name="obtainedMarks" value={subject.obtainedMarks} onChange={(e) => handleInputChange(e, index)} required />
+              <input type="number" className="form-control" name="obtainedMarks" value={subject.obtainedMarks} onChange={(e) => handleOnChange(e, index)} required />
             </div>
           </div>
-        ))} <br />
+        ))}
+
+        <br />
         <button type="button" className="btn btn-primary mr-2" onClick={handleAddSubject}>
           Add Subject
         </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;
         <button type="submit" className="btn btn-success">
           Submit
         </button>
       </form>
     </div>
   );
+}
 };
 
 export default ExamResult;

@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs')
 const Teacher = require('../models/Teacher');
 const Student = require('../models/Student');
 const Parents = require('../models/Parents');
+const Admin = require('../models/Admin');
 const path = require('path');
 const multer = require('multer');
-// here file destination is defined
+// here file destination is defined 
 
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -83,87 +84,57 @@ router.post('/createTeacher', [
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'D:/Major_Project/edutracker/backend/uploads'); // The folder where uploaded files will be saved
+        cb(null, path.join(__dirname, '..','uploads')); // Files will be saved in the 'uploads' folder
     },
     filename: (req, file, cb) => {
         const extname = path.extname(file.originalname);
         const filename = `${Date.now()}${extname}`;
-        cb(null, filename); // Set the filename for the uploaded file
+        cb(null, filename); // Set the filename for the uploaded file (timestamp + original file extension)
     },
 });
-const upload = multer({ storage }).single("photo");
 
-router.post('/createStudent', upload, [
+// Multer upload configuration
+const upload = multer({ storage }).single('photo');
 
-    //validate entries
-    body('firstName', 'first Name is required').isLength({ min: 1 }),
-    body('lastName', 'Last name is required').isLength({ min: 1 }),
-    body('email', 'Enter a valid email').isEmail(),
-    body('dateOfBirth', 'Date of birth is required').isDate(),
-    body('contactNumber', 'Invalid Indian phone number format').matches(/^[6-9]\d{9}$/),
-    body('parentContact', 'Invalid Indian phone number format').matches(/^[6-9]\d{9}$/),
-    body('address', 'Address is required').isLength({ min: 1 }),
-    body('password', 'Password must be at least 5 characters long').isLength({ min: 5 }),
-    body('confirmPassword', 'Passwords do not match').custom((value, { req }) => {
-        return value === req.body.password;
-    }),
-    body('gender', 'Invalid gender value').isIn(['Male', 'Female', 'Other']),
-    body('rollNo', 'Roll no is required').isLength({ min: 3 })
-
-
-], async (req, res) => {
-    let success = false;
-    // Check if there are validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ success, errors: errors.array() });
-    }
-
-    //check whether email exists or not
-    try {
-        let student = await Student.findOne({ email: req.body.email });
-        if (student) {
-            return res.status(400).json({ success, error: "Sorry, the student already exists" });
-        }
-        //handle the uploaded file
-        let photoFilename = '';
-        if (req.file) {
-            photoFilename = req.file.filename;
+// API endpoint for creating a student
+router.post('/createStudent', (req, res) => {
+    upload(req, res, async (err) => {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred (e.g., file size limit exceeded)
+            console.error('Multer Error:', err);
+            return res.status(400).json({ success: false, error: 'File upload failed' });
+        } else if (err) {
+            // An unknown error occurred
+            console.error('Unknown Error:', err);
+            return res.status(500).json({ success: false, error: 'Internal server error' });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        try {
+            const { firstName, lastName, email, dateOfBirth, contactNumber, parentContact, address, password, confirmPassword, gender, currentSem, rollNo } = req.body;
+            const photo = req.file ? req.file.filename : null; // Get the uploaded file name
 
-        student = await Student.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            dateOfBirth: req.body.dateOfBirth,
-            contactNumber: req.body.contactNumber,
-            parentContact: req.body.parentContact,
-            address: req.body.address,
-            password: hashedPassword,
-            confirmPassword: hashedPassword,
-            gender: req.body.gender,
-            photo: photoFilename,
-            rollNo: req.body.rollNo, // Store the filename in the student record
+            const student = await Student.create({
+                firstName,
+                lastName,
+                email,
+                dateOfBirth,
+                contactNumber,
+                parentContact,
+                address,
+                password,
+                confirmPassword,
+                gender,
+                photo,
+                currentSem,
+                rollNo,
+            });
 
-        });
-
-        const data = {
-            student: {
-                id: student.id
-            }
+            res.status(201).json({ success: true, student });
+        } catch (error) {
+            console.error(error);  
+            res.status(500).json({ success: false, error: 'Internal server error' });
         }
-        const authToken = jwt.sign(data, JWT_SECRET)
-        success = true;
-        res.json({ success, authToken });
-        console.log(authToken);
-    }
-    catch (error) {
-        console.error(error.message);
-        res.status(500).send("Some error occurred");
-    }
+    });
 });
 
 
@@ -232,14 +203,61 @@ router.post('/createParent', [
     }
 
 })
+//Register the admin  ////////////////////////////////////////////////////////////////////////////
+router.post('/createAdmin', [
+    body('firstName', 'First name is required').isLength({ min: 1 }),
+    body('lastName', 'Last name is required').isLength({ min: 1 }),
+    body('email', 'Enter a valid email').isEmail(),
+    body('password', 'valid password').isLength({ min: 5 })
+], async (req, res) => {
+    let success = false;
 
+    //check if there are validation results
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+        return res.status(400).json({ success, error: error.array() });
+    }
+    try {
+        let admin = await Admin.findOne({ email: req.body.email });
+
+        if (admin) {
+            return res.status(400).json({ error: "sorry this user is already exists" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        admin = await Admin.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: hashedPassword,
+            // You can handle photo field separately if needed
+        });
+
+        const data = {
+            admins: {
+                id: admin.id
+            }
+        }
+        const authToken = jwt.sign(data, JWT_SECRET)
+        success = true;
+        res.json({ success, authToken });
+        console.log(authToken);
+
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("Some error occurred 1");
+    }
+})
 //Login the Users based on there User Type////////////////////////////////////////////////////////
 
 router.post('/login', [
     body('userType', 'please enter valid user type').exists(),
     body('email', 'enter a valid email').isEmail(),
     body('password', 'password can not be blank').exists()
-  
+
 ], async (req, res) => {
     let success = false
     //if there are error the return bad request and errors
@@ -326,10 +344,82 @@ router.post('/login', [
             res.json({ success, authToken, id, userType });
 
         }
+        else if (userType === 'Admin') {
+            let user = await Admin.findOne({ email })
+            if (!user) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+
+            const comparePassword = await bcrypt.compare(password, user.password);
+
+            if (!comparePassword) {
+                success = false;
+                return res.status(400).json({ success, error: "please login with right credentials" });
+            }
+            const data = {
+                user: {
+                    id: user.id
+                }
+            }
+
+            const authToken = jwt.sign(data, JWT_SECRET)
+            success = true;
+            const id = user.id;
+            res.json({ success, authToken, id, userType });
+
+        }
     } catch (error) {
         console.error(error.message);
         res.status(500).send("internal server error");
     }
 })
 
+router.post('/tlogin', [
+
+    body('email', 'enter a valid email').isEmail(),
+    body('password', 'password can not be blank').exists()
+
+], async (req, res) => {
+    let success = false
+    //if there are error the return bad request and errors
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+
+        let user = await Teacher.findOne({ email })
+        if (!user) {
+            success = false;
+            return res.status(400).json({ success, error: "please login with right credentials" });
+        }
+
+        const comparePassword = await bcrypt.compare(password, user.password);
+
+        if (!comparePassword) {
+            success = false;
+            return res.status(400).json({ success, error: "please login with right credentials" });
+        }
+        const data = {
+            user: {
+                id: user.id
+            }
+        }
+        const userType = 'Teacher';
+        const authToken = jwt.sign(data, JWT_SECRET)
+        success = true;
+        const id = user.id;
+        res.json({ success, authToken, id,userType });
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).send("internal server error");
+    }
+
+})
 module.exports = router;

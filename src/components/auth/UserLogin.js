@@ -89,16 +89,23 @@ export default function Login() {
         localStorage.setItem("id",response.data.id);
         localStorage.setItem("userType",response.data.userType);
       }
-      if(response.data.userType ==='Student')
+       if(response.data.userType ==='Student')
       {
         navigate('/shome');
         localStorage.setItem("token",response.data.authToken);
         localStorage.setItem("id",response.data.id);
         localStorage.setItem("userType",response.data.userType);
       }
-      if(response.data.userType ==='Parent')
+     if(response.data.userType ==='Parent')
       {
         navigate('/phome');
+        localStorage.setItem("token",response.data.authToken);
+        localStorage.setItem("id",response.data.id);
+        localStorage.setItem("userType",response.data.userType);
+      }
+       if(response.data.userType ==='Admin')
+      {
+        navigate('/ahome');
         localStorage.setItem("token",response.data.authToken);
         localStorage.setItem("id",response.data.id);
         localStorage.setItem("userType",response.data.userType);
@@ -109,6 +116,7 @@ export default function Login() {
       console.error(error.response.data);
       // Handle error, show error message to the user
     }
+    console.log(credentials);
   }
 
   return (
@@ -145,7 +153,7 @@ export default function Login() {
                   type="email"
                   name="email"
                   className="form-control form-control-sm"
-                  id="exampleInputEmail1"
+                  id="email"
                   style={inputStyle}
                   onChange={onChange}
                   value={credentials.email}
@@ -160,7 +168,7 @@ export default function Login() {
                   type="password"
                   name='password'
                   className="form-control form-control-sm"
-                  id="exampleInputPassword1"
+                  id="password"
                   style={inputStyle}
                   onChange={onChange}
                   value={credentials.password}
@@ -173,9 +181,7 @@ export default function Login() {
               >
                 Sign In
               </button>
-              <div className="signup" style={signUpStyle}>
-                Do not have an account? <Link to="#">Create One</Link>
-              </div>
+              
             </form>
           </div>
         </div>

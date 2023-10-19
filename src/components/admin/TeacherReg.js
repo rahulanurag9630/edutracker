@@ -198,6 +198,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const TeacherReg = () => {
+  const port = process.env.PORT;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -220,7 +221,7 @@ const TeacherReg = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/createTeacher', formData);
+      const response = await axios.post(`${port}/api/auth/createTeacher`, formData);
       console.log(response.data);
       navigate('/ahome');
       // Handle success, redirect user, or show a success message

@@ -1,23 +1,13 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const uploadNotesSchema = new mongoose.Schema({
-    subject:{
-        type:String,
-        require:true
-    },
-    subjectCode:{
-        type:String,
-        require:true
-    },
-    unit:{
-        type:String,
-        require: true
-    },
-    notes: {
-        type:String, // Photo stored as a Buffer
-      }
+const uploadNotesSchema = new Schema({
+  // Define your schema fields here
+  subject: String,
+  subjectCode: String,
+  unit: String,
+  notes: String // Assuming notes is a string in your schema
 });
 
 const UploadNotes = mongoose.model('UploadNotes', uploadNotesSchema);
-
-module.export = UploadNotes;
+module.exports = UploadNotes;
