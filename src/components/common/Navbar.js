@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaHome, FaInfoCircle, FaUser, FaUserShield, FaClipboardList, FaFileAlt, FaCalendar, FaTasks, FaGraduationCap, FaBell, FaHandsHelping, FaFileUpload, FaUserCircle } from 'react-icons/fa'; // Import Font Awesome icons
+import { FaHome, FaInfoCircle, FaUser, FaUserShield, FaClipboardList, FaFileAlt, FaSignOutAlt, FaCalendar, FaTasks, FaGraduationCap, FaBell, FaHandsHelping, FaFileUpload, FaUserCircle } from 'react-icons/fa'; // Import Font Awesome icons
 import { AiOutlineSolution } from 'react-icons/ai';
 
-
+import '../../assets/navbar.css'
 
 
 
@@ -15,7 +15,9 @@ import { AiOutlineSolution } from 'react-icons/ai';
 function Navbar() {
   const navigate = useNavigate();
   const radiousstyle = {
-    borderRadius: '10px'
+    borderRadius: '10px',
+    backgroundColor: ''
+
   };
   let location = useLocation();
   let navLinks;
@@ -24,13 +26,15 @@ function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     localStorage.removeItem('userType');
+    localStorage.removeItem('name');
+    localStorage.removeItem('rollNo');
     navigate('/');
 
   }
   switch (userType) {
     case "Student":
       navLinks = (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={radiousstyle}>
+        <nav className="navbar navbar-expand-lg navbar-dark " style={radiousstyle}>
           <div className="container-fluid">
             <Link className="navbar-brand" to="/shome">
               EduTracker
@@ -56,14 +60,7 @@ function Navbar() {
                     <FaHome /> Home
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/viewnotice' ? 'active' : ''}`}
-                    to="/viewnotice"
-                  >
-                    <FaClipboardList /> View Notice
-                  </Link>
-                </li>
+
                 <li className="nav-item">
                   <Link
                     className={`nav-link ${location.pathname === '/notes' ? 'active' : ''}`}
@@ -96,14 +93,7 @@ function Navbar() {
                     <FaGraduationCap /> Exam Result
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/academicdates' ? 'active' : ''}`}
-                    to="/academicdates"
-                  >
-                    <FaCalendar /> Academic Dates
-                  </Link>
-                </li>
+
                 <li className="nav-item">
                   <Link
                     className={`nav-link ${location.pathname === '/helpdesk' ? 'active' : ''}`}
@@ -117,10 +107,12 @@ function Navbar() {
                     className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
                     to="/profile"
                   >
-                    <FaUserCircle /> Profile
+                    <FaUserCircle /> Profile(Smart Card)
                   </Link>
                 </li>
-                <button onClick={handleLogout} className='btn btn-dark'>Logout</button>
+                <button className="btn btn-danger mx-2" onClick={handleLogout} style={{float:'right',marginLeft:'10vw'}}>
+                  <FaSignOutAlt className="logout-icon" /> Logout
+                </button>
               </ul>
             </div>
           </div>
@@ -165,6 +157,14 @@ function Navbar() {
                 </li>
                 <li className="nav-item">
                   <Link
+                    className={`nav-link ${location.pathname === '/submittedAssignment' ? 'active' : ''}`}
+                    to="/submittedAssignment"
+                  >
+                    <FaClipboardList /> Submitted Assignments
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
                     className={`nav-link ${location.pathname === '/takeattendance' ? 'active' : ''}`}
                     to="/takeattendance"
                   >
@@ -187,14 +187,7 @@ function Navbar() {
                     <FaFileUpload /> Upload Notes
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/viewnotes' ? 'active' : ''}`}
-                    to="/viewnotes"
-                  >
-                    <AiOutlineSolution /> View Notes
-                  </Link>
-                </li >
+
                 <li className="nav-item">
                   <Link className={`nav-link ${location.pathname === '/publishnotices' ? 'active' : ''}`}
                     to="/publishnotices">
@@ -202,9 +195,8 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="nav-item">
-
                   <Link className="nav-link" onClick={handleLogout}>
-                    Logout
+                    <FaSignOutAlt className="logout-icon" /> Logout
                   </Link>
                 </li>
 
@@ -226,26 +218,83 @@ function Navbar() {
 
         //   <Link onClick={handleLogout}>Logout</Link>
         // </nav>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={{ borderRadius: "10px" }}>
-          <div className="container-fluid">
-            <Link className="navbar-brand" to="/thome">
-              EduTracker
-            </Link>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/thome">
-                    <FaHome /> Home
-                  </Link>
-                </li>
-                <Link className="nav-link" onClick={handleLogout}>
-                  Logout
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={radiousstyle}>
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/shome">
+            EduTracker
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/phome' ? 'active' : ''}`}
+                  to="/phome"
+                >
+                  <FaHome /> Home
                 </Link>
-              </ul>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/results' ? 'active' : ''}`}
+                  to="/results"
+                >
+                  <FaHome /> Results
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/monitorAttendance' ? 'active' : ''}`}
+                  to="/monitorAttendance"
+                >
+                  <FaHome /> Attendance
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/viewnotice' ? 'active' : ''}`}
+                  to="/viewnotice"
+                >
+                  <FaHome /> Notices
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/temp' ? 'active' : ''}`}
+                  to="/temp"
+                >
+                  <FaHome /> Schedule Meating
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${location.pathname === '/helpdesk' ? 'active' : ''}`}
+                  to="/helpdesk"
+                >
+                  <FaHandsHelping /> Help
+                </Link>
+              </li>
+              
+              <li className="nav-item">
+                <Link className="nav-link" onClick={handleLogout}>
+                  <FaSignOutAlt className="logout-icon" /> Logout
+                </Link>
+              </li>
 
-            </div>
+            </ul>
           </div>
-        </nav>
+        </div>
+      </nav>
       );
       break;
     case "Admin":
@@ -301,6 +350,14 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link
+                    className={`nav-link ${location.pathname === '/query' ? 'active' : ''}`}
+                    to="/query"
+                  >
+                    <FaCalendar /> Queries
+                  </Link>
+                </li>
+                <li className="nav-item">
 
                   <Link className="nav-link" onClick={handleLogout}>
                     Logout
@@ -344,8 +401,8 @@ function Navbar() {
                 </li>
                 <li className="nav-item">
                   <Link
-                    className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
-                    to="/about"
+                    className={`nav-link ${location.pathname === '/teams' ? 'active' : ''}`}
+                    to="/teams"
                   >
                     <FaInfoCircle /> About
                   </Link>
@@ -355,7 +412,7 @@ function Navbar() {
                     className={`nav-link ${location.pathname === '/adminlogin' ? 'active' : ''}`}
                     to="/adminlogin"
                   >
-                    <FaUserShield /> Admin Login
+                    <FaUserShield />Teacher Login
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -366,14 +423,7 @@ function Navbar() {
                     <FaUser /> User Login
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/shome' ? 'active' : ''}`}
-                    to="/shome"
-                  >
-                    <FaUser /> student
-                  </Link>
-                </li>
+               
               </ul>
             </div>
           </div>

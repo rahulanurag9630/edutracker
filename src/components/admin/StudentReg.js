@@ -203,25 +203,25 @@
 //     </select>
 //   </div>
 // </div>
-            // <div className="row mb-3">
-            //   <div className="col-md-6">
-            //     <label htmlFor="photo" className="form-label">Photo</label>
-            //     <input type="file" className="form-control" name="photo" id="photo" onChange={handleFileChange} required />
-            //   </div>
-            //   <div className="col-md-6">
-            //     <label htmlFor="currentSem" className="form-label">Current Semester</label>
-            //     <input type="text" className={`form-control ${errors.currentSem && 'is-invalid'}`} name="currentSem" id="currentSem" onChange={handleFormChange} required />
-            //   </div>
-            // </div>
-            // <div className="row mb-3">
-            //   <div className="col-md-6">
-            //     <label htmlFor="rollNo" className="form-label">Roll Number</label>
-            //     <input type="text" className={`form-control ${errors.rollNo && 'is-invalid'}`} name="rollNo" id="rollNo" onChange={handleFormChange} required />
-            //   </div>
-            //   <div className="col-md-6">
-            //     {/* Add any additional fields here */}
-            //   </div>
-            // </div>
+// <div className="row mb-3">
+//   <div className="col-md-6">
+//     <label htmlFor="photo" className="form-label">Photo</label>
+//     <input type="file" className="form-control" name="photo" id="photo" onChange={handleFileChange} required />
+//   </div>
+//   <div className="col-md-6">
+//     <label htmlFor="currentSem" className="form-label">Current Semester</label>
+//     <input type="text" className={`form-control ${errors.currentSem && 'is-invalid'}`} name="currentSem" id="currentSem" onChange={handleFormChange} required />
+//   </div>
+// </div>
+// <div className="row mb-3">
+//   <div className="col-md-6">
+//     <label htmlFor="rollNo" className="form-label">Roll Number</label>
+//     <input type="text" className={`form-control ${errors.rollNo && 'is-invalid'}`} name="rollNo" id="rollNo" onChange={handleFormChange} required />
+//   </div>
+//   <div className="col-md-6">
+//     {/* Add any additional fields here */}
+//   </div>
+// </div>
 //             <button type="submit" className="btn btn-primary">Submit</button>
 //           </form>
 //         </div>
@@ -236,10 +236,12 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function StudentForm() {
+  const navigate = useNavigate()
   const port = process.env.PORT;
   const [formData, setFormData] = useState({
     firstName: '',
@@ -289,7 +291,7 @@ function StudentForm() {
   // Validate the form and handle form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-   console.log(errors);
+    console.log(errors);
     // Validate the form
     const isValid = validateForm();
 
@@ -306,7 +308,7 @@ function StudentForm() {
             'Content-Type': 'multipart/form-data',
           },
         });
-
+        navigate('/ahome')
         console.log(response.data);
         // Handle success, redirect or show a success message
       } catch (error) {
@@ -386,110 +388,129 @@ function StudentForm() {
     return valid;
   };
 
-  return (
-    <div className="container mt-3">
-      <div className="card">
-        <div className="card-header">
-          <h2 className="text-center">Student Registration</h2>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="firstName" className="form-label">First Name</label>
-                <input type="text" className={`form-control ${errors.firstName && 'is-invalid'}`} name="firstName" id="firstName" onChange={handleFormChange} required />
-                {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="lastName" className="form-label">Last Name</label>
-                <input type="text" className={`form-control ${errors.lastName && 'is-invalid'}`} name="lastName" id="lastName" onChange={handleFormChange} required />
-                {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
-              </div>
-            </div>
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="email" className="form-label">Email</label>
-                <input type="email" className={`form-control ${errors.email && 'is-invalid'}`} name="email" id="email" onChange={handleFormChange} required />
-                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="dateOfBirth" className="form-label">Date of Birth</label>
-                <input type="date" className={`form-control ${errors.date && 'is-invalid'}`} name="dateOfBirth" id="dateOfBirth" onChange={handleFormChange} required />
-                {errors.date && <div className="invalid-feedback">{errors.date}</div>}
-              </div>
-            </div>
+  useEffect(() => {
+    const authToken = localStorage.getItem('token');
+    if (authToken) {
+      setIsLoggedIn(true);
+    } else {
+      // If user is not logged in, redirect to home page
+      navigate('/');
+    }
+  }, [isLoggedIn,navigate]);
 
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="contactNumber" className="form-label">Contact Number</label>
-                <input type="tel" className={`form-control ${errors.contactNumber && 'is-invalid'}`} name="contactNumber" id="contactNumber" onChange={handleFormChange} required />
-                {errors.contactNumber && <div className="invalid-feedback">{errors.contactNumber}</div>}
+  // If user is not authenticated, do not render the component
+  if (!isLoggedIn) {
+    return null;
+  }
 
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="parentContact" className="form-label">Parent Contact Number</label>
-                <input type="tel" className={`form-control ${errors.parentContact && 'is-invalid'}`} name="parentContact" id="parentContact" onChange={handleFormChange} required />
-                {errors.parentContact && <div className="invalid-feedback">{errors.parentContact}</div>}
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="address" className="form-label">Address</label>
-                <input type="text" className={`form-control ${errors.address && 'is-invalid'}`} name="address" id="address" onChange={handleFormChange} required />
-                {errors.address && <div className="invalid-feedback">{errors.address}</div>}
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="password" className="form-label">Password</label>
-                <input type="password" className={`form-control ${errors.password && 'is-invalid'}`} name="password" id="password" onChange={handleFormChange} required />
-                {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                <input type="password" className={`form-control ${errors.confirmPassword && 'is-invalid'}`} name="confirmPassword" id="confirmPassword" onChange={handleFormChange} required />
-                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="gender" className="form-label">Gender</label>
-                <select className="form-select" name="gender" id="gender" onChange={handleFormChange} required>
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="photo" className="form-label">Photo</label>
-                <input type="file" className="form-control" name="photo" id="photo" onChange={handleFileChange} required />
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="currentSem" className="form-label">Current Semester</label>
-                <input type="text" className={`form-control ${errors.currentSem && 'is-invalid'}`} name="currentSem" id="currentSem" onChange={handleFormChange} required />
-                {errors.currentSem && <div className="invalid-feedback">{errors.currentSem}</div>}
 
+    return (
+      <div className="container mt-3">
+        <div className="card">
+          <div className="card-header">
+            <h2 className="text-center">Student Registration</h2>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleFormSubmit}>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="firstName" className="form-label">First Name</label>
+                  <input type="text" className={`form-control ${errors.firstName && 'is-invalid'}`} name="firstName" id="firstName" onChange={handleFormChange} required />
+                  {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="lastName" className="form-label">Last Name</label>
+                  <input type="text" className={`form-control ${errors.lastName && 'is-invalid'}`} name="lastName" id="lastName" onChange={handleFormChange} required />
+                  {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
+                </div>
               </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label htmlFor="rollNo" className="form-label">Roll Number</label>
-                <input type="text" className={`form-control ${errors.rollNo && 'is-invalid'}`} name="rollNo" id="rollNo" onChange={handleFormChange} required />
-                {errors.rollNo && <div className="invalid-feedback">{errors.rollNo}</div>}
 
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input type="email" className={`form-control ${errors.email && 'is-invalid'}`} name="email" id="email" onChange={handleFormChange} required />
+                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="dateOfBirth" className="form-label">Date of Birth</label>
+                  <input type="date" className={`form-control ${errors.date && 'is-invalid'}`} name="dateOfBirth" id="dateOfBirth" onChange={handleFormChange} required />
+                  {errors.date && <div className="invalid-feedback">{errors.date}</div>}
+                </div>
               </div>
-              <div className="col-md-6">
-                {/* Add any additional fields here */}
+
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="contactNumber" className="form-label">Contact Number</label>
+                  <input type="tel" className={`form-control ${errors.contactNumber && 'is-invalid'}`} name="contactNumber" id="contactNumber" onChange={handleFormChange} required />
+                  {errors.contactNumber && <div className="invalid-feedback">{errors.contactNumber}</div>}
+
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="parentContact" className="form-label">Parent Contact Number</label>
+                  <input type="tel" className={`form-control ${errors.parentContact && 'is-invalid'}`} name="parentContact" id="parentContact" onChange={handleFormChange} required />
+                  {errors.parentContact && <div className="invalid-feedback">{errors.parentContact}</div>}
+                </div>
               </div>
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="address" className="form-label">Address</label>
+                  <input type="text" className={`form-control ${errors.address && 'is-invalid'}`} name="address" id="address" onChange={handleFormChange} required />
+                  {errors.address && <div className="invalid-feedback">{errors.address}</div>}
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="password" className="form-label">Password</label>
+                  <input type="password" className={`form-control ${errors.password && 'is-invalid'}`} name="password" id="password" onChange={handleFormChange} required />
+                  {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                  <input type="password" className={`form-control ${errors.confirmPassword && 'is-invalid'}`} name="confirmPassword" id="confirmPassword" onChange={handleFormChange} required />
+                  {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="gender" className="form-label">Gender</label>
+                  <select className="form-select" name="gender" id="gender" onChange={handleFormChange} required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="photo" className="form-label">Photo</label>
+                  <input type="file" className="form-control" name="photo" id="photo" onChange={handleFileChange} required />
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="currentSem" className="form-label">Current Semester</label>
+                  <input type="text" className={`form-control ${errors.currentSem && 'is-invalid'}`} name="currentSem" id="currentSem" onChange={handleFormChange} required />
+                  {errors.currentSem && <div className="invalid-feedback">{errors.currentSem}</div>}
+
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="rollNo" className="form-label">Roll Number</label>
+                  <input type="text" className={`form-control ${errors.rollNo && 'is-invalid'}`} name="rollNo" id="rollNo" onChange={handleFormChange} required />
+                  {errors.rollNo && <div className="invalid-feedback">{errors.rollNo}</div>}
+
+                </div>
+                <div className="col-md-6">
+                  {/* Add any additional fields here */}
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  
 }
 
 export default StudentForm;

@@ -55,7 +55,7 @@ const submitButtonStyle = {
 };
 
 
-export default function Login() {
+export default function Login(props) {
 
   const navigate = useNavigate();
 
@@ -71,6 +71,7 @@ export default function Login() {
       const response = await axios.post('http://localhost:5000/api/auth/tlogin', credentials);
       console.log(response.data);
       navigate('/thome');
+      props.showAlert("Logged in successfully","success")
       localStorage.setItem("token",response.data.authToken);
       localStorage.setItem("id",response.data.id);
       localStorage.setItem("userType",response.data.userType);

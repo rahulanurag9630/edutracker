@@ -5,7 +5,7 @@ import img2 from '../../assets/images/never-stop-learning-3653430_1280.jpg'
 
 const Carousel = () => {
   return (
-    <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExample" className="carousel slide" data-bs-ride="carousel" style={{marginTop:'3vh',marginBottom:'3vh',borderRadius:'10px'}}>
       <div className="carousel-inner">
         <div className="carousel-item active">
           <img

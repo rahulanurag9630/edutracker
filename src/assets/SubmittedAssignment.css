@@ -1,0 +1,53 @@
+.assignments-container {
+    margin: 20px;
+  }
+  
+  .assignments-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #007bff;
+  }
+  
+  .assignments-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .assignments-table th, .assignments-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .assignments-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .download-link {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s ease;
+  }
+  
+  .download-link:hover {
+    color: #0056b3;
+  }
+  
+  .loading {
+    font-size: 18px;
+    color: #007bff;
+    text-align: center;
+    margin-top: 50px;
+    animation: fadeIn 1s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  

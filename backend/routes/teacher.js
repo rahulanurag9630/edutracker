@@ -6,9 +6,11 @@ const Attendance = require('../models/Attendance');
 const UploadNotes = require('../models/UploadNotes');
 const Student = require('../models/Student');
 const Notice = require('../models/Notice');
+const fetchuser = require('../middleware/Fetchuser');
+const SubmitAssi = require ('../models/SubmitAssi');
 const path = require('path');
 const multer = require('multer');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult,query } = require('express-validator');
 const fetchUser = require('../middleware/Fetchuser');
 
 
@@ -51,32 +53,34 @@ router.post('/uploadAssignment', fetchUser, [
 
 //Route 2. Fetch all the students for attendance//////////////////////////////////////////////////////
 
-router.get('/fetchAllStudenst', fetchUser, [
-    body('semester', 'please select a semester').isLength({ min: 1 })
-],
-
+router.get(
+    '/fetchAllStudents',
+    [
+        query('semester').exists().withMessage('please select a semester'), // Use query instead of body for validation
+    ],
+    // Make sure fetchUser middleware runs after validation middleware
     async (req, res) => {
         // Check if there are validation errors
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+
         try {
-            const students = await Student.find({ currentSem: req.body.semester },);
-            
-
+            const semester = req.query.semester; // Get semester from query parameters
+            const students = await Student.find({ currentSem: semester });
             res.json(students);
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error.message);
-            res.status(500).send("Some error occurred");
+            res.status(500).send('Some error occurred');
         }
-
-    });
+    }
+);
 
 //Route 3 : Post Notices ///////////////////////////////////////////////////////////////
 
 router.post('/postNotices', fetchUser, [
+    body('nFor','enter audiance').isLength({min:1}),
     body('noticeType', 'Enter a Notice Type').isLength({ min: 1 }),
     body('notice', 'enter Noice').isLength({ min: 2 })
 ],
@@ -88,6 +92,7 @@ router.post('/postNotices', fetchUser, [
         }
         try {
             const notice = await Notice.create({
+                nFor:req.body.nFor,
                 noticeType: req.body.noticeType,
                 notice: req.body.notice
             });
@@ -132,7 +137,7 @@ router.post('/submitExamResult', fetchUser, [
             const examResult = new ExamResult({
                 studentName: req.body.studentName,
                 rollNo: req.body.rollNo,
-                fatherName:req.body.fatherName,
+                fatherName: req.body.fatherName,
                 examDate: req.body.examDate,
                 subjects: req.body.subjects
             });
@@ -196,4 +201,71 @@ router.post('/uploadNotes', fetchUser, async (req, res) => {
     });
 });
 
+//Router 6 : Taking attendance/////////////////////////////////////////////////////////
+router.post('/takeAttendance',[
+    body('date').isDate().notEmpty(),
+    body('semester').isString().notEmpty(),
+    body('students.*.name').isString().notEmpty(),
+    body('students.*.rollNo').isString().notEmpty(),
+    body('students.*.status').isIn(['Present', 'Absent']).notEmpty(),
+    body('students.*.remark').isString().notEmpty(),
+  ],async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    else{
+        console.log("true")
+    }
+    try {
+      const { date, semester, students } = req.body;
+      const newAttendance = new Attendance({ date, semester, students });
+      await newAttendance.save();
+      res.status(201).json(newAttendance);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  //Route 7 : Notices for Parents////////////////////////////////////////////////////////
+
+  router.post('/postNotices', fetchUser, [
+    body('noticeType', 'Enter a Notice Type').isLength({ min: 1 }),
+    body('notice', 'enter Noice').isLength({ min: 2 })
+],
+    async (req, res) => {
+        const errors = validationResult(req);
+        let success = false;
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ success, erros: errors.array() });
+        }
+        try {
+            const notice = await Notice.create({
+                noticeType: req.body.noticeType,
+                notice: req.body.notice
+            });
+            success = true;
+            res.json({ success, notice });
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("Some error occurred");
+        }
+    });
+
+//Route 8: // fetching the assignment of the all students/////////////////////////////////////////
+
+
+router.get('/fetchAssignment',
+async (req,res)=>{
+    try {
+        const assignments = await SubmitAssi.find();
+        res.json(assignments);
+    } catch (error) {
+        console.error(error.message);
+            res.status(500).send("Some error occurred");
+    }
+});
 module.exports = router;

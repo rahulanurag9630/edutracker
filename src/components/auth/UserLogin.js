@@ -68,7 +68,7 @@ const selectStyle = {
 
 // ... existing styles
 
-export default function Login() {
+export default function Login(props) {
   const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({userType: "" , email: "", password: ""});
@@ -82,6 +82,7 @@ export default function Login() {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
       console.log(response.data);
+      props.showAlert("Logged in successfully","success")
       if(response.data.userType ==='Teacher')
       {
         navigate('/thome');
@@ -95,6 +96,9 @@ export default function Login() {
         localStorage.setItem("token",response.data.authToken);
         localStorage.setItem("id",response.data.id);
         localStorage.setItem("userType",response.data.userType);
+        localStorage.setItem("name",response.data.name);
+        localStorage.setItem("rollNo",response.data.rollNo);
+        
       }
      if(response.data.userType ==='Parent')
       {
@@ -102,6 +106,8 @@ export default function Login() {
         localStorage.setItem("token",response.data.authToken);
         localStorage.setItem("id",response.data.id);
         localStorage.setItem("userType",response.data.userType);
+        localStorage.setItem("contactNumber",response.data.contactNumber);
+
       }
        if(response.data.userType ==='Admin')
       {
@@ -115,6 +121,7 @@ export default function Login() {
     } catch (error) {
       console.error(error.response.data);
       // Handle error, show error message to the user
+      props.showAlert("Invalid details","danger") 
     }
     console.log(credentials);
   }

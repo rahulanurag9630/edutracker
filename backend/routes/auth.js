@@ -5,6 +5,7 @@ const Teacher = require('../models/Teacher');
 const Student = require('../models/Student');
 const Parents = require('../models/Parents');
 const Admin = require('../models/Admin');
+const Help = require('../models/Help');
 const path = require('path');
 const multer = require('multer');
 // here file destination is defined 
@@ -84,7 +85,7 @@ router.post('/createTeacher', [
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..','uploads')); // Files will be saved in the 'uploads' folder
+        cb(null, path.join(__dirname, '..', 'uploads')); // Files will be saved in the 'uploads' folder
     },
     filename: (req, file, cb) => {
         const extname = path.extname(file.originalname);
@@ -113,6 +114,9 @@ router.post('/createStudent', (req, res) => {
             const { firstName, lastName, email, dateOfBirth, contactNumber, parentContact, address, password, confirmPassword, gender, currentSem, rollNo } = req.body;
             const photo = req.file ? req.file.filename : null; // Get the uploaded file name
 
+            // Hash the password with bcrypt
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const student = await Student.create({
                 firstName,
                 lastName,
@@ -121,8 +125,8 @@ router.post('/createStudent', (req, res) => {
                 contactNumber,
                 parentContact,
                 address,
-                password,
-                confirmPassword,
+                password: hashedPassword, // Store the hashed password in the database
+                confirmPassword: hashedPassword, // You might want to validate this separately if needed
                 gender,
                 photo,
                 currentSem,
@@ -131,7 +135,7 @@ router.post('/createStudent', (req, res) => {
 
             res.status(201).json({ success: true, student });
         } catch (error) {
-            console.error(error);  
+            console.error(error);
             res.status(500).json({ success: false, error: 'Internal server error' });
         }
     });
@@ -309,14 +313,18 @@ router.post('/login', [
             }
             const data = {
                 user: {
-                    id: user.id
+                    id: user.id,
+                    name: user.firstName + ' ' + user.lastName,
+                    rollNo: user.rollNo
                 }
             }
 
             const authToken = jwt.sign(data, JWT_SECRET)
             success = true;
             const id = user.id;
-            res.json({ success, authToken, id, userType });
+            const name = data.user.name;
+            const rollNo = user.rollNo
+            res.json({ success, authToken, id, userType, name, rollNo });
 
         }
         else if (userType === 'Parent') {
@@ -341,7 +349,8 @@ router.post('/login', [
             const authToken = jwt.sign(data, JWT_SECRET)
             success = true;
             const id = user.id;
-            res.json({ success, authToken, id, userType });
+            const contactNumber = user.contactNumber
+            res.json({ success, authToken, id, userType,contactNumber });
 
         }
         else if (userType === 'Admin') {
@@ -374,7 +383,7 @@ router.post('/login', [
         res.status(500).send("internal server error");
     }
 })
-
+// Route x Teache login seperatly
 router.post('/tlogin', [
 
     body('email', 'enter a valid email').isEmail(),
@@ -414,12 +423,52 @@ router.post('/tlogin', [
         const authToken = jwt.sign(data, JWT_SECRET)
         success = true;
         const id = user.id;
-        res.json({ success, authToken, id,userType });
+        res.json({ success, authToken, id, userType });
     }
     catch (error) {
         console.error(error.message);
         res.status(500).send("internal server error");
     }
 
+}) 
+
+
+//Route : Help desk Login required///////////////////////////////////////
+router.post('/help', [
+    body('name', 'name is required').exists(),
+    body('email', 'email is required').isEmail(),
+    body('message', 'write your query').exists()
+],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        try {
+            const { name, email, message } = req.body;
+            const help = await Help.create({
+                name,
+                email,
+                message
+            })
+
+            res.status(201).json({ success: true, help });
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("internal server error");
+        }
+
+    });
+// Route x ; fetch queries/////////////////////////////////////////
+router.get('/fetchQueries',async(req,res)=>{
+    try {
+        const response = await Help.find();
+        res.json(response);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("internal server error");
+    }
 })
+
 module.exports = router;

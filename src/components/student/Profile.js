@@ -1,85 +1,83 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../../assets/Profile.css';
+import { useNavigate } from 'react-router-dom';
 
-      import React, { useState } from 'react';
+const Profile = () => {
+  const navigate = useNavigate();
+  const [student, setStudent] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const rollNo = localStorage.getItem('rollNo');
 
-const tableCellStyle = {
-  padding: '10px',
-  textAlign: 'center',
-};
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/students/fetchStudent?rollNo=${rollNo}`, {
+          headers: {
+            'auth-token': localStorage.getItem('token'),
+          },
+        });
+        if (response.data.success) {
+          setStudent(response.data.student);
+        } else {
+          setError(response.data.error);
+        }
+      } catch (error) {
+        console.error('Error fetching roll numbers:', error);
+        setLoading(false); // Set loading to false in case of an erro
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const containerStyle = {
-  marginTop: '30px',
-  padding: '20px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  borderRadius: '5px',
-  backgroundColor: 'lightblue', // Set the background color to light blue
-};
+    fetchStudentData();
+  }, [rollNo]);
 
-const headerStyle = {
-  fontSize: '24px',
-  marginBottom: '20px',
-};
+  ///////
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-const Notes = () => {
-  // State to store the selected option for each row
-  const [attendance, setAttendance] = useState({});
+  useEffect(() => {
+    const authToken = localStorage.getItem('token');
+    if (authToken) {
+      setIsLoggedIn(true);
+    } else {
+      // If user is not logged in, redirect to home page
+      navigate('/');
+    }
+  }, [navigate]);
 
-  // Function to update the attendance state
-  const updateAttendance = (studentId, value) => {
-    setAttendance({
-      ...attendance,
-      [studentId]: value,
-    });
-  };
-
-  return (
-    <div className="container" style={containerStyle}>
-      <h2 style={headerStyle}>Attendance</h2>
-      <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th style={tableCellStyle}>S.N</th>
-              <th style={tableCellStyle}>Student Name</th>
-              <th style={tableCellStyle}>Roll No</th>
-              <th style={tableCellStyle}>Dates</th>
-              <th style={tableCellStyle}>Attendance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={tableCellStyle}>1.</td>
-              <td style={tableCellStyle}>John Doe</td>
-              <td style={tableCellStyle}>12345</td>
-              <td style={tableCellStyle}>2023-10-01</td>
-              <td style={tableCellStyle}>
-                <label>
-                  <input
-                    type="radio"
-                    value="Yes"
-                    name="attendance-1"
-                    checked={attendance['1'] === 'Yes'}
-                    onChange={() => updateAttendance('1', 'Yes')}
-                  />
-                  Yes
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="No"
-                    name="attendance-1"
-                    checked={attendance['1'] === 'No'}
-                    onChange={() => updateAttendance('1', 'No')}
-                  />
-                  No
-                </label>
-              </td>
-            </tr>
-            {/* Additional rows... */}
-          </tbody>
-        </table>
+  // If user is not authenticated, do not render the component
+  if (!isLoggedIn) {
+    return null;
+  }
+  else {
+    return (
+      <div className="profile-container">
+        {loading ? (
+          <p>Loading student data...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : student ? (
+          <div className="profile-header">
+            <img src={`http://localhost:5000/uploads/${student.photo}`} alt={`${student.firstName} ${student.lastName}`} className="profile-photo" />
+            <h1>{`${student.firstName} ${student.lastName}`}</h1>
+            <p>Email: {student.email}</p>
+            <p>Contact Number: {student.contactNumber}</p>
+            <p>Parent Contact: {student.parentContact}</p>
+            <p>Date of Birth: {new Date(student.dateOfBirth).toLocaleDateString()}</p>
+            <p>Address: {student.address}</p>
+            <p>Gender: {student.gender}</p>
+            <div className="profile-details">
+              <h2>Student Details</h2>
+              <p>Roll Number: {rollNo}</p>
+              <p>Current Semester: {student.currentSem}</p>
+            </div>
+          </div>
+        ) : null}
       </div>
-    </div>
-  );
+    );
+  }
 };
 
-export default Notes;
+export default Profile;

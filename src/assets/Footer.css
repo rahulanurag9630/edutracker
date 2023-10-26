@@ -4,15 +4,13 @@ body {
     flex-direction: column;
     min-height: 100vh; /* This will ensure the body element takes at least the full height of the viewport */
     margin: 0;
+
   }
   .footer {
-    background-color: #333;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-    position: relative;
-    bottom: 0;
+    background-color: #180A0A;
     width: 100%;
+    color: white; /* Customize text color */
+    padding: 20px; /* Add padding for better appearance */
   }
  
   
@@ -21,7 +19,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+    justify-content: center;
+}
+
   
   .footer h2 {
     margin-bottom: 10px;
