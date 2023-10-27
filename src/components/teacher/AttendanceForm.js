@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const AttendanceForm = ({ onSubmit, props }) => {
+const AttendanceForm = ( props ) => { 
   const navigate = useNavigate()
   const [semester, setSemester] = useState('');
   const [students, setStudents] = useState([]);
@@ -73,7 +73,7 @@ const AttendanceForm = ({ onSubmit, props }) => {
       name: student.name,
       rollNo: student.rollNo,
       status: attendanceData.find((item) => item.studentId === student._id)?.attendance || 'Absent', // Default to 'Absent' if no attendance record is found
-      remark: remarks,
+      remark: attendanceData.find((item) => item.studentId === student._id)?.remarks || '', // Include remarks from the state
     }));
 
     // Create the complete form data to send to the backend
@@ -114,7 +114,7 @@ const AttendanceForm = ({ onSubmit, props }) => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+ 
     return (
       <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
         <div className="heading-bar text-center bg-primary py-2 mb-3">
@@ -178,12 +178,12 @@ const AttendanceForm = ({ onSubmit, props }) => {
                         <input
                           className="form-check-input"
                           type="radio"
-                          id={`presentRadio-${student._id}`}
-                          value="Present"
+                          id={`AbsentRadio-${student._id}`}
+                          value="Absent"
                           checked={
-                            attendanceData.find((item) => item.studentId === student._id)?.attendance === 'Present'
+                            attendanceData.find((item) => item.studentId === student._id)?.attendance === 'Absent'
                           }
-                          onChange={() => handleAttendanceChange(student._id, 'Present')}
+                          onChange={() => handleAttendanceChange(student._id, 'Absent')}
                         />
 
 
@@ -220,7 +220,7 @@ const AttendanceForm = ({ onSubmit, props }) => {
         </form>
       </div>
     );
-  }
+  
 };
 
 export default AttendanceForm;

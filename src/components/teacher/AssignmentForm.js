@@ -69,7 +69,7 @@ const AssignmentForm = (props) => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+
     return (
       <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
         <div className="heading-bar text-center bg-primary py-2 mb-3">
@@ -152,7 +152,7 @@ const AssignmentForm = (props) => {
       </div>
 
     );
-  }
+  
 };
 
 export default AssignmentForm;

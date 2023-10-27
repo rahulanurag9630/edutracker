@@ -146,7 +146,7 @@ export default function Login(props) {
                   onChange={onChange}
                   value={credentials.userType}
                 >
-                  <option value="Teacher">Teacher</option>
+                  <option value="Teacher">Select</option>
                   <option value="Student">Student</option>
                   <option value="Parent">Parent</option>
                   <option value="Admin">Admin</option>

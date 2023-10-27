@@ -86,7 +86,7 @@ const Results = () => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+
     if (loading) {
       return <div>Loading...</div>; 
     }
@@ -145,7 +145,7 @@ const Results = () => {
         )}
       </div>
     );
-  }
+  
 
 };
 

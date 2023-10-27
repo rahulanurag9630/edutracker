@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../assets/SubmittedAssignment.css'; // Import the CSS file for component-specific styles
+import { useNavigate } from 'react-router-dom';
 
 function SubmittedAssignment() {
+  const navigate = useNavigate();
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
@@ -25,6 +27,24 @@ function SubmittedAssignment() {
     fetchData();
   }, []);
 
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('token');
+    if (authToken) {
+      setIsLoggedIn(true);
+    } else {
+      // If user is not logged in, redirect to home page
+      navigate('/');
+    }
+  }, [navigate]);
+
+  // If user is not authenticated, do not render the component
+  if (!isLoggedIn) {
+    return null;
+  }
+ 
   return (
     <div className="assignments-container">
       <h1 className="assignments-heading">Submitted Assignments</h1>

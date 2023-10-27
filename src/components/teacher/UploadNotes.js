@@ -72,7 +72,7 @@ const UploadNotes = (props) => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+ 
     return (
       <div className="container my-5" style={{ backgroundColor: '#ECDBBA' }}>
         <div className="heading-bar text-center bg-primary py-2 mb-3">
@@ -138,7 +138,7 @@ const UploadNotes = (props) => {
         </form>
       </div>
     );
-  }
+  
 };
 
 export default UploadNotes;

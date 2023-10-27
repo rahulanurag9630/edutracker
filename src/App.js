@@ -13,6 +13,8 @@ import AssignmentForm from './components/teacher/AssignmentForm';
 import THome from './components/teacher/THome';
 import NoticeForm from './components/teacher/NoticeForm';
 import SubmittedAssignment from './components/teacher/SubmittedAssignment';
+import AllResult from './components/teacher/AllResult';
+
 
 //Parent components ////////////////////////////////////////////////////////
 import PHome from './components/parent/PHome'
@@ -51,6 +53,7 @@ import UserLogin from './components/auth/UserLogin'
 import Login from './components/auth/Login';
 import './App.css'
 import Alert from './components/common/Alert';
+import AllAttendance from './components/teacher/AllAttendance';
 
 
 function App() {
@@ -146,7 +149,7 @@ function App() {
           <Route exact path='/profile' element={<Profile />}></Route>
           <Route exact path='/thome' element={<THome showAlert={showAlert} />}></Route>
           <Route exact path='/giveassignment' element={<AssignmentForm showAlert={showAlert} />}></Route>
-          <Route exact path='/takeattendance' element={< AttendanceForm />}></Route>
+          <Route exact path='/takeattendance' element={< AttendanceForm  showAlert={showAlert}/>}></Route>
           <Route exact path='/examresult' element={<ExamResult />}></Route>
           <Route exact path='/uploadnotes' element={< UploadNotes />}></Route>
           <Route exact path='/ahome' element={<AHome showAlert={showAlert} />}></Route>
@@ -158,10 +161,11 @@ function App() {
           <Route exact path='/results' element={<Results />}></Route>
           <Route exact path='/monitorAttendance' element={<MonitorAttendance />}></Route>
           <Route exact path='/submittedAssignment' element={<SubmittedAssignment />}></Route>
-
+          <Route exact path='/allResult' element={<AllResult />}></Route>
+          <Route exact path='/allAttendance' element={<AllAttendance />} ></Route>
           <Route exact path='/query' element={<QueryList />}></Route>
 
-
+      
 
         </Routes>
         <Footer />

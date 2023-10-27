@@ -1,46 +1,96 @@
-import React from 'react';
+import { useState } from "react";
 
-function Carousel({ items }) {
+const slideStyles = {
+  width: "100%",
+  height: "100%",
+  borderRadius: "10px",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+};
+
+const rightArrowStyles = {
+  position: "absolute",
+  top: "50%",
+  transform: "translate(0, -50%)",
+  right: "32px",
+  fontSize: "45px",
+  color: "#fff",
+  zIndex: 1,
+  cursor: "pointer",
+};
+
+const leftArrowStyles = {
+  position: "absolute",
+  top: "50%",
+  transform: "translate(0, -50%)",
+  left: "32px",
+  fontSize: "45px",
+  color: "#fff",
+  zIndex: 1,
+  cursor: "pointer",
+};
+
+const sliderStyles = {
+  
+  position: "relative",
+  height: "100%",
+};
+
+const dotsContainerStyles = {
+  display: "flex",
+  justifyContent: "center",
+};
+
+const dotStyle = {
+  margin: "0 3px",
+  cursor: "pointer",
+  fontSize: "20px",
+};
+
+const Carousel2 = ({ slides }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const goToPrevious = () => {
+    const isFirstSlide = currentIndex === 0;
+    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
+    setCurrentIndex(newIndex);
+  };
+  const goToNext = () => {
+    const isLastSlide = currentIndex === slides.length - 1;
+    const newIndex = isLastSlide ? 0 : currentIndex + 1;
+    setCurrentIndex(newIndex);
+  };
+  const goToSlide = (slideIndex) => {
+    setCurrentIndex(slideIndex);
+  };
+  const slideStylesWidthBackground = {
+    ...slideStyles,
+    backgroundImage: `url(${slides[currentIndex].url})`,
+  };
+
   return (
-    <div id="myCarousel" className="carousel slide" data-ride="carousel">
-      <div className="carousel-inner">
-        {items.map((item, index) => (
+    <div style={sliderStyles}>
+      <div>
+        <div onClick={goToPrevious} style={leftArrowStyles}>
+          ❰
+        </div>
+        <div onClick={goToNext} style={rightArrowStyles}>
+          ❱
+        </div>
+      </div>
+      <div style={slideStylesWidthBackground}></div>
+      <div style={dotsContainerStyles}>
+        {slides.map((slide, slideIndex) => (
           <div
-            key={index}
-            className={`carousel-item${index === 0 ? ' active' : ''}`}
+            style={dotStyle}
+            key={slideIndex}
+            onClick={() => goToSlide(slideIndex)}
           >
-            <img
-              className="d-block w-100"
-              src={item.image}
-              alt={`Slide ${index + 1}`}
-            />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>{item.title}</h5>
-              <p>{item.description}</p>
-            </div>
+            ●
           </div>
         ))}
       </div>
-      <a
-        className="carousel-control-prev"
-        href="#myCarousel"
-        role="button"
-        data-slide="prev"
-      >
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="sr-only">Previous</span>
-      </a>
-      <a
-        className="carousel-control-next"
-        href="#myCarousel"
-        role="button"
-        data-slide="next"
-      >
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="sr-only">Next</span>
-      </a>
     </div>
   );
-}
+};
 
-export default Carousel;
+export default Carousel2;
