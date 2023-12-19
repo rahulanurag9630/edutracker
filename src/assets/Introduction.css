@@ -1,0 +1,72 @@
+.introduction-container {
+    background-color: #f7f7f7;
+    padding: 50px;
+    text-align: center;
+    width: 80vw;
+    margin: 0 auto; /* This will center the container horizontally */
+    border-radius: 10px;
+    background-image: url("https://cdn.pixabay.com/photo/2016/05/20/14/14/open-spiral-notebook-1405082_1280.png");
+    background-size: cover;
+}
+
+  
+  .introduction-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    font-size: 48px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .description {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 40px;
+  }
+  
+  .feature-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .feature-list li {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 3s ease forwards;
+  }
+  
+  .feature-list li svg {
+    margin-right: 20px;
+    font-size: 36px;
+    color: #007bff;
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .conclusion {
+    font-size: 20px;
+    color: #333;
+    margin-top: 50px;
+    opacity: 0;
+    animation: fadeIn 4s ease 3s forwards;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  

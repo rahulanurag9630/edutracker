@@ -1,49 +1,85 @@
-import React from 'react'
-import img from '../../assets/images/brain-544403_1280.png'
-import img2 from '../../assets/images/never-stop-learning-3653430_1280.jpg'
+import React, { useState, useEffect } from 'react';
+import '../../assets/carousel.css';
 
-
+import img3 from '../../assets/images/group front.jpg';
+import img4 from '../../assets/images/group back.jpg';
+import img5 from '../../assets/images/whole group.jpg';
+import img6 from '../../assets/images/sitting.jpg'
 const Carousel = () => {
+  const [index, setIndex] = useState(0);
+
+  const prevSlide = () => {
+    setIndex((index + slides.length - 1) % slides.length);
+  };
+
+  const nextSlide = () => {
+    setIndex((index + 1) % slides.length);
+  };
+
+  const changeSlide = () => {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = 'none';
+      dots[i].classList.remove('active1');
+    }
+
+    slides[index].style.display = 'block';
+    dots[index].classList.add('active1');
+  };
+
+  const slides = [
+    {
+      src:`${img3}`,
+      style: { background: 'dodgerBlue' },
+    },
+    {
+      src: `${img4}`,
+      style: { background: 'coral' },
+    },
+    {
+      src: `${img5}`,
+      style: { background: 'crimson' },
+    },
+    {
+      src: `${img6}`,
+      style: { background: '#6edf10' },
+    },
+  ];
+
+  const dots = slides.map((slide, i) => (
+    <span
+      key={i}
+      className={`dot ${i === index ? 'active1' : ''}`}
+      onClick={() => setIndex(i)}
+    />
+  ));
+
+
+  // Empty dependency array ensures cleanup only once
+
   return (
-    <div id="carouselExample" className="carousel slide" data-bs-ride="carousel" style={{marginTop:'3vh',marginBottom:'3vh',borderRadius:'10px'}}>
-      <div className="carousel-inner">
-        <div className="carousel-item active">
-          <img
-            src={img2}
-            className="d-block w-100 carousel-image"
-            alt="First slide"
-          />
+    <div id="slider">
+      {slides.map((slide, i) => (
+        <div
+          key={i}
+          className="slide"
+          style={{
+            ...slide.style,
+            display: i === index ? 'block' : 'none',
+          }}
+        >
+          <img src={slide.src} alt="ddd" />
         </div>
-        <div className="carousel-item">
-          <img
-            src="https://via.placeholder.com/800x400/ffc300/ffffff?text=Second+Slide"
-            className="d-block w-100 carousel-image"
-            alt="Second slide"
-          />
-        </div>
-        <div className="carousel-item">
-          <img
-            src="https://via.placeholder.com/800x400/ff5733/ffffff?text=Third+Slide"
-            className="d-block w-100 carousel-image"
-            alt="Third slide"
-          />
-        </div>
-        <div className="carousel-item">
-          <img
-            src="https://via.placeholder.com/800x400/ffc300/ffffff?text=Fourth+Slide"
-            className="d-block w-100 carousel-image"
-            alt="Fourth slide"
-          />
-        </div>
-      </div>
-      <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Next</span>
-      </button>
+      ))}
+
+      <span className="controls" onClick={prevSlide} id="left-arrow">
+        <i className="fa fa-arrow-left" aria-hidden="true"></i>
+      </span>
+
+      <span className="controls" id="right-arrow" onClick={nextSlide}>
+        <i className="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+
+      <div id="dots-con">{dots}</div>
     </div>
   );
 };

@@ -88,6 +88,7 @@ const ViewAttendance = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -95,7 +96,7 @@ const ViewAttendance = () => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+   
     return (
       <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
         <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Attendance</h2>
@@ -126,7 +127,7 @@ const ViewAttendance = () => {
         </div>
       </div>
     );
-  }
+  
 };
 
 export default ViewAttendance;

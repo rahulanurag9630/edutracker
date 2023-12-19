@@ -28,7 +28,15 @@ function Navbar() {
     localStorage.removeItem('userType');
     localStorage.removeItem('name');
     localStorage.removeItem('rollNo');
-    navigate('/');
+    localStorage.removeItem('contactNumber')
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      navigate('/');
+      console.log('logged out'); 
+    } else {
+      // If the user is not logged in, redirect to the home page
+
+    }
 
   }
 
@@ -46,7 +54,7 @@ function Navbar() {
               data-bs-toggle="collapse"
               data-bs-target="#navbarNav"
               aria-controls="navbarNav"
-              aria-expanded="false"
+              aria-expanded="false" 
               aria-label="Toggle navigation"
             >
               <span className="navbar-toggler-icon"></span>
@@ -111,7 +119,7 @@ function Navbar() {
                     <FaUserCircle /> Profile(Smart Card)
                   </Link>
                 </li>
-                <button className="btn btn-danger mx-2" onClick={handleLogout} style={{ float: 'right', marginLeft: '10vw' }}>
+                <button className="btn btn-danger" onClick={handleLogout} style={{marginLeft: '8rem'   }}>
                   <FaSignOutAlt className="logout-icon" /> Logout
                 </button>
               </ul>
@@ -211,7 +219,7 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" onClick={handleLogout}>
+                  <Link className="nav-link" onClick={handleLogout} style={{marginLeft: '8rem'   }}>
                     <FaSignOutAlt className="logout-icon" /> Logout
                   </Link>
                 </li>
@@ -265,7 +273,7 @@ function Navbar() {
                     className={`nav-link ${location.pathname === '/results' ? 'active' : ''}`}
                     to="/results"
                   >
-                    <FaHome /> Results
+                    <FaGraduationCap /> Results
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -273,7 +281,7 @@ function Navbar() {
                     className={`nav-link ${location.pathname === '/monitorAttendance' ? 'active' : ''}`}
                     to="/monitorAttendance"
                   >
-                    <FaHome /> Attendance
+                    <FaCalendar />Attendance
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -281,7 +289,7 @@ function Navbar() {
                     className={`nav-link ${location.pathname === '/viewnotice' ? 'active' : ''}`}
                     to="/viewnotice"
                   >
-                    <FaHome /> Notices
+                    <FaBell /> Notices
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -302,7 +310,7 @@ function Navbar() {
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" onClick={handleLogout}>
+                  <Link className="nav-link" onClick={handleLogout} style={{marginLeft: '8rem'   }}>
                     <FaSignOutAlt className="logout-icon" /> Logout
                   </Link>
                 </li>
@@ -375,7 +383,7 @@ function Navbar() {
                 </li>
                 <li className="nav-item">
 
-                  <Link className="nav-link" onClick={handleLogout}>
+                  <Link className="nav-link" onClick={handleLogout} style={{marginLeft: '8rem'   }}>
                     Logout
                   </Link>
                 </li>
@@ -415,22 +423,16 @@ function Navbar() {
                     <FaHome /> Home
                   </Link>
                 </li>
+                
                 <li className="nav-item">
                   <Link
                     className={`nav-link ${location.pathname === '/teams' ? 'active' : ''}`}
                     to="/teams"
                   >
-                    <FaInfoCircle /> About
+                    <FaInfoCircle /> About institute
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/adminlogin' ? 'active' : ''}`}
-                    to="/adminlogin"
-                  >
-                    <FaUserShield />Teacher Login
-                  </Link>
-                </li>
+                
                 <li className="nav-item">
                   <Link
                     className={`nav-link ${location.pathname === '/userlogin' ? 'active' : ''}`}
@@ -439,7 +441,23 @@ function Navbar() {
                     <FaUser /> User Login
                   </Link>
                 </li>
-
+                
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link ${location.pathname === '/helpdesk' ? 'active' : ''}`}
+                    to="/helpdesk"
+                  >
+                    <FaUser /> Contact Us
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link ${location.pathname === '/intro' ? 'active' : ''}`}
+                    to="/intro"
+                  >
+                    <FaInfoCircle /> About Platform
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

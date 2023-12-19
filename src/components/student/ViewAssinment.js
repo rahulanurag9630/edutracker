@@ -46,7 +46,7 @@ const ViewAssignment = (props) => {
       try {
         const response = await axios.get('http://localhost:5000/api/students/fetchAssignment', {
           headers: {
-            'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50Ijp7ImlkIjoiNjUyOTc4OTUwNjEzZmQxYWQxYjc4MmZiIn0sImlhdCI6MTY5NzIxNjY2Mn0.03jlAjNQAdQpI7vZopSIzmsGK--7Jb29TS0GtOg9TDA'
+            'auth-token': localStorage.getItem('token')
           }
         }); // Use the correct API endpoint
         setAssignments(response.data);
@@ -77,7 +77,7 @@ const ViewAssignment = (props) => {
     // Make a POST request to submit the assignment file
     axios.post(`http://localhost:5000/api/students/submitAssignment`, formData, {
       headers: {
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50Ijp7ImlkIjoiNjUyOTc4OTUwNjEzZmQxYWQxYjc4MmZiIn0sImlhdCI6MTY5NzIxNjY2Mn0.03jlAjNQAdQpI7vZopSIzmsGK--7Jb29TS0GtOg9TDA'
+        'auth-token': localStorage.getItem('token')
       }, formData
     })
       .then((response) => {
@@ -106,6 +106,8 @@ const ViewAssignment = (props) => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
+
     }
   }, [navigate]);
 
@@ -113,45 +115,45 @@ const ViewAssignment = (props) => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
 
-    return (
-      <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
-        <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Assignment</h2>
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th style={tableCellStyle}>S.N</th>
-                <th style={tableCellStyle}>Subject Name</th>
-                <th style={tableCellStyle}>Given Date</th>
-                <th style={tableCellStyle}>Submittion Date</th>
-                <th style={tableCellStyle}>Questions</th>
-                <th style={tableCellStyle}></th>
+
+  return (
+    <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
+      <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Assignment</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th style={tableCellStyle}>S.N</th>
+              <th style={tableCellStyle}>Subject Name</th>
+              <th style={tableCellStyle}>Given Date</th>
+              <th style={tableCellStyle}>Submittion Date</th>
+              <th style={tableCellStyle}>Questions</th>
+              <th style={tableCellStyle}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {assignments.map((assignment, index) => (
+              <tr key={assignment._id}>
+                <td style={tableCellStyle}>{index + 1}.</td>
+                <td style={tableCellStyle}>{assignment.subject}</td>
+                <td style={tableCellStyle}>{formatDate(assignment.givenDate)}</td>
+                <td style={tableCellStyle}>{formatDate(assignment.submissionDate)}</td>
+                <td style={tableCellStyle}>{assignment.questions}</td>
+                <td><button onClick={() => { setIsModalOpen(true); setSelectedAssignment(assignment); }}>Submit</button></td>
               </tr>
-            </thead>
-            <tbody>
-              {assignments.map((assignment, index) => (
-                <tr key={assignment._id}>
-                  <td style={tableCellStyle}>{index + 1}.</td>
-                  <td style={tableCellStyle}>{assignment.subject}</td>
-                  <td style={tableCellStyle}>{formatDate(assignment.givenDate)}</td>
-                  <td style={tableCellStyle}>{formatDate(assignment.submissionDate)}</td>
-                  <td style={tableCellStyle}>{assignment.questions}</td>
-                  <td><button onClick={() => { setIsModalOpen(true); setSelectedAssignment(assignment); }}>Submit</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={handleAssignmentSubmission}
-          />
-        </div>
+            ))}
+          </tbody>
+        </table>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAssignmentSubmission}
+        />
       </div>
-    );
-  }
+    </div>
+  );
+
 };
 
 export default ViewAssignment;

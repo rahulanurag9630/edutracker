@@ -15,11 +15,7 @@ const containerStyle = {
   backgroundColor: 'lightblue', // Set the background color to light blue
 };
 
-const headerStyle = {
-  fontSize: '24px',
-  marginBottom: '20px',
 
-};
 
 const MonitorAttendance = () => {
   const navigate = useNavigate();
@@ -120,6 +116,7 @@ const MonitorAttendance = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -127,49 +124,49 @@ const MonitorAttendance = () => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
-    return (
-      <div className="container" style={containerStyle}>
-        <select value={selectedRollNo} onChange={(e) => setSelectedRollNo(e.target.value)}>
-          <option value="">Select Roll No</option>
-          {rollNos.map((rollNo, index) => (
-            <option key={index} value={rollNo}>
-              {rollNo}
-            </option>
-          ))}
-        </select>
-        <button onClick={handleFindAttendance}>Find Attendance</button>
-        <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
-          <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Attendance</h2>
-          <div className="table-responsive">
-            <table className="table table-bordered" style={{ borderColor: 'black' }}>
-              <thead>
-                <tr>
-                  <th style={tableCellStyle}>S.N</th>
-                  <th style={tableCellStyle}>Date</th>
-                  <th style={tableCellStyle}>Status</th>
-                  <th style={tableCellStyle}>Remark</th>
-                </tr>
-              </thead>
-              <tbody>
-                {attendance.map((attendanceRecord, index) => (
-                  attendanceRecord.students.map((student, studentIndex) => (
-                    <tr key={`${attendanceRecord._id}-${student._id}`}>
-                      <td style={tableCellStyle}>{index + 1}.{/*{studentIndex + 1}*/}</td>
-                      <td style={tableCellStyle}>{formatDate(attendanceRecord.date)}</td>
-                      <td style={getStatusCellStyle(student.status)} >{student.status}</td>
 
-                      <td style={tableCellStyle} >{student.remark}</td>
-                    </tr>
-                  ))
-                ))}
-              </tbody>
-            </table>
-          </div>
+  return (
+    <div className="container" style={containerStyle}>
+      <select value={selectedRollNo} onChange={(e) => setSelectedRollNo(e.target.value)}>
+        <option value="">Select Roll No</option>
+        {rollNos.map((rollNo, index) => (
+          <option key={index} value={rollNo}>
+            {rollNo}
+          </option>
+        ))}
+      </select>
+      <button onClick={handleFindAttendance}>Find Attendance</button>
+      <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
+        <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Attendance</h2>
+        <div className="table-responsive">
+          <table className="table table-bordered" style={{ borderColor: 'black' }}>
+            <thead>
+              <tr>
+                <th style={tableCellStyle}>S.N</th>
+                <th style={tableCellStyle}>Date</th>
+                <th style={tableCellStyle}>Status</th>
+                <th style={tableCellStyle}>Remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendance.map((attendanceRecord, index) => (
+                attendanceRecord.students.map((student, studentIndex) => (
+                  <tr key={`${attendanceRecord._id}-${student._id}`}>
+                    <td style={tableCellStyle}>{index + 1}.{/*{studentIndex + 1}*/}</td>
+                    <td style={tableCellStyle}>{formatDate(attendanceRecord.date)}</td>
+                    <td style={getStatusCellStyle(student.status)} >{student.status}</td>
+
+                    <td style={tableCellStyle} >{student.remark}</td>
+                  </tr>
+                ))
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
 
 export default MonitorAttendance;

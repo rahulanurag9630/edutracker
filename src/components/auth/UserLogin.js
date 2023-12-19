@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 
 const loginFormStyle = {
@@ -71,57 +73,53 @@ const selectStyle = {
 export default function Login(props) {
   const navigate = useNavigate();
 
-  const [credentials, setCredentials] = useState({userType: "" , email: "", password: ""});
+  const [credentials, setCredentials] = useState({ userType: "", email: "", password: "" });
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit =async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
       console.log(response.data);
-      props.showAlert("Logged in successfully","success")
-      if(response.data.userType ==='Teacher')
-      {
+      props.showAlert("Logged in successfully", "success")
+      if (response.data.userType === 'Teacher') {
         navigate('/thome');
-        localStorage.setItem("token",response.data.authToken);
-        localStorage.setItem("id",response.data.id);
-        localStorage.setItem("userType",response.data.userType);
+        localStorage.setItem("token", response.data.authToken);
+        localStorage.setItem("id", response.data.id);
+        localStorage.setItem("userType", response.data.userType);
       }
-       if(response.data.userType ==='Student')
-      {
+      if (response.data.userType === 'Student') {
         navigate('/shome');
-        localStorage.setItem("token",response.data.authToken);
-        localStorage.setItem("id",response.data.id);
-        localStorage.setItem("userType",response.data.userType);
-        localStorage.setItem("name",response.data.name);
-        localStorage.setItem("rollNo",response.data.rollNo);
-        
-      }
-     if(response.data.userType ==='Parent')
-      {
-        navigate('/phome');
-        localStorage.setItem("token",response.data.authToken);
-        localStorage.setItem("id",response.data.id);
-        localStorage.setItem("userType",response.data.userType);
-        localStorage.setItem("contactNumber",response.data.contactNumber);
+        localStorage.setItem("token", response.data.authToken);
+        localStorage.setItem("id", response.data.id);
+        localStorage.setItem("userType", response.data.userType);
+        localStorage.setItem("name", response.data.name);
+        localStorage.setItem("rollNo", response.data.rollNo);
 
       }
-       if(response.data.userType ==='Admin')
-      {
-        navigate('/ahome');
-        localStorage.setItem("token",response.data.authToken);
-        localStorage.setItem("id",response.data.id);
-        localStorage.setItem("userType",response.data.userType);
+      if (response.data.userType === 'Parent') {
+        navigate('/phome');
+        localStorage.setItem("token", response.data.authToken);
+        localStorage.setItem("id", response.data.id);
+        localStorage.setItem("userType", response.data.userType);
+        localStorage.setItem("contactNumber", response.data.contactNumber);
+
       }
-      
+      if (response.data.userType === 'Admin') {
+        navigate('/ahome');
+        localStorage.setItem("token", response.data.authToken);
+        localStorage.setItem("id", response.data.id);
+        localStorage.setItem("userType", response.data.userType);
+      }
+
       // Handle success, redirect user, or show a success message
     } catch (error) {
       console.error(error.response.data);
       // Handle error, show error message to the user
-      props.showAlert("Invalid details","danger") 
+      props.showAlert("Invalid details", "danger")
     }
     console.log(credentials);
   }
@@ -130,9 +128,9 @@ export default function Login(props) {
     <div className="global-container">
       <div className="card login-form" style={loginFormStyle}>
         <div className="card-body">
-          <h1 className="card-title text-denger" style={cardTitleStyle}>
-            LOGIN
-          </h1>
+          <div className="logo-container">
+            <center>            <FontAwesomeIcon icon={faUserShield} className="user-shield-icon" size="4x" />
+            </center>          </div>
           <div className="card-text">
             <form onSubmit={handleSubmit}>
               {/* Add User Type select field */}
@@ -146,7 +144,8 @@ export default function Login(props) {
                   onChange={onChange}
                   value={credentials.userType}
                 >
-                  <option value="Teacher">Select</option>
+                  <option value="">Select</option>
+                  <option value="Teacher">Teacher</option>
                   <option value="Student">Student</option>
                   <option value="Parent">Parent</option>
                   <option value="Admin">Admin</option>
@@ -168,9 +167,7 @@ export default function Login(props) {
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <Link to="#" style={forgotPasswordStyle}>
-                  Forgot Password?
-                </Link>
+
                 <input
                   type="password"
                   name='password'
@@ -188,7 +185,7 @@ export default function Login(props) {
               >
                 Sign In
               </button>
-              
+
             </form>
           </div>
         </div>

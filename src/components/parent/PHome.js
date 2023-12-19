@@ -21,14 +21,14 @@ function PHome() {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+ 
     return (
       <div>
         <Carousel />
         <ViewNotice />
       </div>
     )
-  }
+  
 }
 
 export default PHome

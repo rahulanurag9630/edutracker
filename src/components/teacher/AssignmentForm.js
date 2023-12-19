@@ -61,7 +61,8 @@ const AssignmentForm = (props) => {
       setIsLoggedIn(true);
     } else {
       // If user is not logged in, redirect to home page
-      navigate('/');
+      navigate('/thome');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -69,6 +70,8 @@ const AssignmentForm = (props) => {
   if (!isLoggedIn) {
     return null;
   }
+   
+
 
     return (
       <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
@@ -152,6 +155,7 @@ const AssignmentForm = (props) => {
       </div>
 
     );
+  
   
 };
 

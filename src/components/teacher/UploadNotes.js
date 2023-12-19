@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import bluepatti from '../../assets/BluePatti.css'
 const UploadNotes = (props) => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     subject: '',
     subjectCode: '',
@@ -19,11 +20,24 @@ const UploadNotes = (props) => {
     });
   };
 
+  const [fileSize, setFileSize] = useState(0); // State variable to store file size
+  const [errorMessage, setErrorMessage] = useState(''); // State variable for error message
+
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      notes: e.target.files[0]
-    });
+    const selectedFile = e.target.files[0];
+    const maxSize = 20 * 1024 * 1024; // 20 MB in bytes
+
+    if (selectedFile && selectedFile.size > maxSize) {
+      setFileSize(selectedFile.size);
+      setErrorMessage('File size exceeds the limit (20 MB). Please select a smaller file.');
+    } else {
+      setFileSize(0);
+      setErrorMessage('');
+      setFormData({
+        ...formData,
+        notes: selectedFile
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -65,6 +79,7 @@ const UploadNotes = (props) => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false)
     }
   }, [navigate]);
 
@@ -72,73 +87,78 @@ const UploadNotes = (props) => {
   if (!isLoggedIn) {
     return null;
   }
- 
-    return (
-      <div className="container my-5" style={{ backgroundColor: '#ECDBBA' }}>
-        <div className="heading-bar text-center bg-primary py-2 mb-3">
-          <h2 className="text-white">Upload Notes</h2>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label htmlFor="subject" className="form-label">Subject:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="subjectCode" className="form-label">Subject Code:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="subjectCode"
-                name="subjectCode"
-                value={formData.subjectCode}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <label htmlFor="unit" className="form-label">Unit:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="unit"
-                name="unit"
-                value={formData.unit}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="notes" className="form-label">File:</label>
-              <input
-                type="file"
-                className="form-control"
-                id="notes"
-                name="notes"
-                onChange={handleFileChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-12 text-center">
-              <button type="submit" className="btn btn-primary">Upload</button>
-            </div>
-          </div>
-        </form>
+
+  return (
+    <div className="container my-5" style={{ backgroundColor: '#ECDBBA' }}>
+      <div className="heading-bar text-center bg-primary py-2 mb-3">
+        <h2 className="text-white">Upload Notes</h2>
       </div>
-    );
-  
+      <form onSubmit={handleSubmit}>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="subject" className="form-label">Subject:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="subject"
+              name="subject"
+              value={formData.subject}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="subjectCode" className="form-label">Subject Code:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="subjectCode"
+              name="subjectCode"
+              value={formData.subjectCode}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="unit" className="form-label">Unit:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="unit"
+              name="unit"
+              value={formData.unit}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="notes" className="form-label">File:</label>
+            <input
+              type="file"
+              className="form-control"
+              id="notes"
+              name="notes"
+              onChange={handleFileChange}
+              required
+            />
+            {fileSize > 0 && (
+              <div className="text-danger">{`File size: ${(fileSize / (1024 * 1024)).toFixed(2)} MB`}</div>
+            )}
+            {errorMessage && <div className="text-danger">{errorMessage}</div>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12 text-center">
+            <button type="submit" className="btn btn-primary">Upload</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+
+
 };
 
 export default UploadNotes;

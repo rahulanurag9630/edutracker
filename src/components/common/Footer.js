@@ -6,6 +6,7 @@ const FooterContainer = styled.footer`
   color: white;
   padding: 20px;
   text-align: center;
+  margin-top:10vh;
 `;
 
 const fadeIn = keyframes`
@@ -36,8 +37,8 @@ const Footer = () => {
       <FooterContent>
         <p>About Us: We are a team of creative developers passionate about technology and innovation.</p>
         <p>
-          Links: <FooterLink href="#">Home</FooterLink> | <FooterLink href="#">Services</FooterLink> |{' '}
-          <FooterLink href="#">Contact</FooterLink>
+          Links: <FooterLink href="/">Home</FooterLink> | <FooterLink href="#">Services</FooterLink> |{' '}
+          <FooterLink href="/helpDesk">Contact</FooterLink>
         </p>
         <p>Created by <strong>Anurag & Teams</strong></p>
       </FooterContent>

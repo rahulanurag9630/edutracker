@@ -50,6 +50,7 @@ const ExamResult = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -57,7 +58,7 @@ const ExamResult = () => {
   if (!isLoggedIn) {
     return null;
   }
- else{
+ 
   return (
     <div className="exam-result-container">
       <h2 style={{marginLeft:'34vw'}}>Exam Result</h2>
@@ -100,7 +101,7 @@ const ExamResult = () => {
         </>
       )}
     </div>
-  );}
+  );
 };
 
 export default ExamResult;

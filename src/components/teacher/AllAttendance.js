@@ -103,6 +103,8 @@ const AllAttendance = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
+
     }
   }, [navigate]);
 

@@ -107,6 +107,7 @@ const AttendanceForm = ( props ) => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -114,7 +115,8 @@ const AttendanceForm = ( props ) => {
   if (!isLoggedIn) {
     return null;
   }
- 
+   
+
     return (
       <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
         <div className="heading-bar text-center bg-primary py-2 mb-3">
@@ -220,7 +222,7 @@ const AttendanceForm = ( props ) => {
         </form>
       </div>
     );
-  
+          
 };
 
 export default AttendanceForm;

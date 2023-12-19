@@ -44,6 +44,8 @@ const Profile = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
+
     }
   }, [navigate]);
 
@@ -51,7 +53,7 @@ const Profile = () => {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+
     return (
       <div className="profile-container">
         {loading ? (
@@ -77,7 +79,7 @@ const Profile = () => {
         ) : null}
       </div>
     );
-  }
+  
 };
 
 export default Profile;

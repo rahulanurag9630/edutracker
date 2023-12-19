@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import img from '../../assets/images/Dark Green Chalk Board Good Luck Card1.jpg';
+
+import  '../../assets/notice.css';
+
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: '100vh',
-  // Set the background color to #1E90FF
   color: 'white', // Set the text color to white
   padding: '20px', // Add some padding for spacing
+  backgroundImage: `url(${img})`, // Set the background image using template literals
+  backgroundSize: 'cover', // Adjust the background size as needed
 };
+
+
 
 const textareaStyle = {
   width: '85%',
@@ -60,7 +67,7 @@ export default function ViewNotice() {
         // Ensure that the response.data is an array before setting the state
         if (Array.isArray(response.data)) {
           setNotice(response.data);
-        } else { 
+        } else {
           // Handle the case where the response is not an array (could be null, undefined, or other unexpected data)
           console.error('Invalid response data:', response.data);
         }
@@ -81,6 +88,7 @@ export default function ViewNotice() {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
+      setIsLoggedIn(false);
     }
   }, [navigate]);
 
@@ -88,17 +96,17 @@ export default function ViewNotice() {
   if (!isLoggedIn) {
     return null;
   }
-  else {
+
 
     return (
-      <div style={containerStyle}>
-        <div style={textareaStyle}>
-          <h1 style={noticeStyle}>View Notice</h1>
-          {notice.map((item, index) => (
-            <h1 key={index}>{item.notice}</h1>
-          ))}
+      <div style={{ ...containerStyle }} >
+        <div style={textareaStyle} className='notice'>
+          <center><h2 style={{color:'black' ,backgroundColor:'blueviolet'}}>View Notice</h2></center><br /><br />
+          <center>{notice.map((item, index) => (
+            <h2 key={index} style={{color:'black'}}>{item.notice}</h2>
+          ))}</center>
         </div>
       </div>
     );
-  }
+  
 }

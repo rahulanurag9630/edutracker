@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const NoticeForm = (props) => {
   let navigate = useNavigate();
   const [formData, setFormData] = useState({
-    nFor: 'Students', // Set a default value for nFor
+    nFor: 'Student', // Set a default value for nFor
     noticeType: '',
     notice: '',
   });
@@ -50,54 +50,54 @@ const NoticeForm = (props) => {
   if (!isLoggedIn) {
     return null;
   }
-  
-    return (
-      <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
-        <div className="heading-bar text-center bg-primary py-2 mb-3">
-          <h2 className="text-white">Notices</h2>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Notice Audience:</label>
-            <select
-              className="form-control"
-              name="nFor"
-              value={formData.nFor} // Ensure the value is set correctly
-              onChange={handleInputChange}
-              required
-            >
-              <option value="Students">Student</option>
-              <option value="Parents">Parent</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Notice Type:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="noticeType"
-              value={formData.noticeType}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Notice:</label>
-            <textarea
-              className="form-control"
-              name="notice"
-              value={formData.notice}
-              onChange={handleInputChange}
-              required
-            ></textarea>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Add Notice
-          </button>
-        </form>
+
+  return (
+    <div className="container mt-5" style={{ backgroundColor: '#ECDBBA' }}>
+      <div className="heading-bar text-center bg-primary py-2 mb-3">
+        <h2 className="text-white">Notices</h2>
       </div>
-    );
-  
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Notice Audience:</label>
+          <select
+            className="form-control"
+            name="nFor"
+            value={formData.nFor} // Ensure the value is set correctly
+            onChange={handleInputChange}
+            required
+          >
+            <option value="Student">Student</option>
+            <option value="Parent">Parent</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Notice Type:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="noticeType"
+            value={formData.noticeType}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Notice:</label>
+          <textarea
+            className="form-control"
+            name="notice"
+            value={formData.notice}
+            onChange={handleInputChange}
+            required
+          ></textarea>
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Add Notice
+        </button>
+      </form>
+    </div>
+  );
+
 };
 
 export default NoticeForm;

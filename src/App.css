@@ -2,8 +2,8 @@
 
 body {
   /* Set the background image */
-  background-color: #7858A6;
-  background-image: url('https://cdn.pixabay.com/photo/2020/09/24/16/50/board-5599231_1280.png');
+  background-color:#d8d4d4;
+  /* background-image: url('https://cdn.pixabay.com/photo/2020/09/24/16/50/board-5599231_1280.png'); */
 
   /* Set the background size and other properties */
   
@@ -12,5 +12,7 @@ body {
   -webkit-backdrop-filter: blur(5px); /* For older versions of Safari */
 
   /* Add a fallback background color for browsers that do not support backdrop-filter */
-  background-color: rgba(255, 255, 255, 0.8); /* Adjust the color and opacity as needed */
+}
+.content-container {
+  min-height: calc(100vh - 34px);
 }

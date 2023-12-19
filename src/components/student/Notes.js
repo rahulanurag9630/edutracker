@@ -70,14 +70,16 @@ const Notes = () => {
     } else {
       // If user is not logged in, redirect to home page
       navigate('/');
-    }
-  }, [navigate]);
+      setIsLoggedIn(false);
 
+    }
+  }, [navigate]); 
+ 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {
     return null;
   }
-  else {
+  
     return (
       <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }}>
         <h2 className='text-center bg-primary py-2 mb-3 heading-bar' style={{ marginTop: '10px' }}>Notes</h2>
@@ -132,7 +134,7 @@ const Notes = () => {
         </div>
       </div>
     );
-  }
+  
 };
 
 export default Notes;
