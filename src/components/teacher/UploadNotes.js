@@ -81,7 +81,7 @@ const UploadNotes = (props) => {
       navigate('/');
       setIsLoggedIn(false)
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

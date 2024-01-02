@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NoticeForm = (props) => {
   let navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nFor: 'Student', // Set a default value for nFor
     noticeType: '',
@@ -44,7 +45,7 @@ const NoticeForm = (props) => {
       // If user is not logged in, redirect to home page
       navigate('/');
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

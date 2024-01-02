@@ -7,11 +7,10 @@ import '../../assets/ExamResult.css'
 
 const AllResult = () => {
     const navigate = useNavigate();
-    const [rollNos, setRollNos] = useState([]);
     const [selectedRollNo, setSelectedRollNo] = useState('');
     const [resultFound, setResultFound] = useState(true);
-    const [loading, setLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
 
     ///////////////////////////////////////////////
@@ -59,7 +58,7 @@ const AllResult = () => {
             // If user is not logged in, redirect to home page
             navigate('/');
         }
-    }, [navigate]);
+    }, [localStorage.getItem('token')]);
 
 
 

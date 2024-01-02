@@ -71,7 +71,7 @@ const ExamResult = ({ onSubmit, props }) => {
       // If user is not logged in, redirect to home page
       navigate('/');
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

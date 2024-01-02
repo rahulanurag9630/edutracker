@@ -5,6 +5,8 @@ const HelpDesk = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [token, ] = useState(localStorage.getItem('token'));
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -8,6 +8,7 @@ function SubmittedAssignment() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +39,7 @@ function SubmittedAssignment() {
       // If user is not logged in, redirect to home page
       navigate('/');
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

@@ -20,6 +20,7 @@ const containerStyle = {
 const MonitorAttendance = () => {
   const navigate = useNavigate();
   const [attendance, setAttendance] = useState([]);
+  const [token, ] = useState(localStorage.getItem('token'));
 
   const [rollNos, setRollNos] = useState([]);
   const [selectedRollNo, setSelectedRollNo] = useState('');
@@ -118,7 +119,7 @@ const MonitorAttendance = () => {
       navigate('/');
       setIsLoggedIn(false);
     }
-  }, [navigate]);
+  }, [token,navigate]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

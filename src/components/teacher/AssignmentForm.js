@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 const AssignmentForm = (props) => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     subject: '',
     givenDate: '',
@@ -64,7 +65,7 @@ const AssignmentForm = (props) => {
       navigate('/thome');
       setIsLoggedIn(false);
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token'),navigate]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

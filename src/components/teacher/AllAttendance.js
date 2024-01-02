@@ -15,19 +15,13 @@ const containerStyle = {
   backgroundColor: 'lightblue', // Set the background color to light blue
 };
 
-const headerStyle = {
-  fontSize: '24px',
-  marginBottom: '20px',
 
-};
 
 const AllAttendance = () => {
   const navigate = useNavigate();
   const [attendance, setAttendance] = useState([]);
 
-  const [rollNos, setRollNos] = useState([]);
   const [selectedRollNo, setSelectedRollNo] = useState('');
-  const [loading, setLoading] = useState(true);
   //////////////////////////////////////////////////////////////////////////////
  
 
@@ -106,7 +100,7 @@ const AllAttendance = () => {
       setIsLoggedIn(false);
 
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {
@@ -120,7 +114,7 @@ const AllAttendance = () => {
         <div className="container" style={{ containerStyle, backgroundColor: '#ECDBBA', marginTop: '5vh' }} >
           <h2 className='text-center bg-primary py-2 mb-3 heading-bar'>Attendance</h2>
           <div className="table-responsive">
-            <table className="table table-bordered" style={{ borderColor: 'black' }}>
+            <table className="table table-bordered" style={{ borderColor: 'black' }}> 
               <thead>
                 <tr>
                   <th style={tableCellStyle}>S.N</th>

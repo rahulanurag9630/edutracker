@@ -6,6 +6,7 @@ function THome() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
   useEffect(() => {
     const authToken = localStorage.getItem('token');
     if (authToken) {
@@ -14,7 +15,7 @@ function THome() {
       // If user is not logged in, redirect to home page
       navigate('/');
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

@@ -9,7 +9,6 @@ const AttendanceForm = ( props ) => {
   const [attendanceData, setAttendanceData] = useState([]);
 
   const [searched, setSearched] = useState(false);
-  const [remarks, setRemarks] = useState('');
   const currentDate = new Date().toISOString().split('T')[0];
   useEffect(() => {
     // Initialize attendanceData with default values when students change
@@ -109,7 +108,7 @@ const AttendanceForm = ( props ) => {
       navigate('/');
       setIsLoggedIn(false);
     }
-  }, [navigate]);
+  }, [localStorage.getItem('token')]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {

@@ -11,6 +11,7 @@ const Results = () => {
   const [selectedRollNo, setSelectedRollNo] = useState('');
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, ] = useState(localStorage.getItem('token'));
 
 
   ///////////////////////////////////////////////
@@ -80,7 +81,7 @@ const Results = () => {
       setIsLoggedIn(false); 
 
     }
-  }, [navigate]);
+  }, [token,navigate]);
 
   // If user is not authenticated, do not render the component
   if (!isLoggedIn) {
